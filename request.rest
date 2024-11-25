@@ -1,0 +1,48 @@
+### Add a Post
+POST http://localhost:3000/posts
+Content-Type: application/json
+
+{
+  "title": "My First Post",
+  "content": "This is the content of my first post.",
+  "sender": "123"
+}
+
+### Add a Post
+POST http://localhost:3000/posts
+Content-Type: application/json
+
+{
+"title": "My second post",
+"content": "I love to program.",
+"sender": "555"
+}
+
+### Add a Post
+POST http://localhost:3000/posts
+Content-Type: application/json
+
+{
+  "title": "hello",
+  "content": "I love pizza",
+  "sender": "1234"
+}
+
+### Get All Posts
+GET http://localhost:3000/posts
+
+### Get a Post by ID
+GET http://localhost:3000/posts/67446f5fc021e06658eba6eb
+
+### Update a Post
+PUT http://localhost:3000/posts/67446f5fc021e06658eba6eb
+Content-Type: application/json
+
+{
+"title": "Updated Title",
+"content": "Updated Content"
+}
+
+### Get all posts by sender ID
+GET http://localhost:3000/posts?sender=1234
+
