@@ -46,3 +46,34 @@ Content-Type: application/json
 ### Get all posts by sender ID
 GET http://localhost:3000/posts?sender=1234
 
+### Add a comment
+POST http://localhost:3000/comments
+
+Content-Type: application/json
+
+{
+  "post": "67446f5fc021e06658eba6eb",
+  "content": "comment1 test",
+  "sender": "Ronen"
+}
+
+### Get comment by ID
+GET http://localhost:3000/comments/67460ec19e759d2abe0461ed
+Content-Type: application/json
+
+### Update Comment
+PUT http://localhost:3000/comments/67460ec19e759d2abe0461ed
+
+Content-Type: application/json
+
+{
+  "post": "67446f5fc021e06658eba6eb",
+  "content": "This is an updated comment",
+  "sender": "Ronen"
+}
+
+### Delete Comment
+DELETE http://localhost:3000/comments/67460ec19e759d2abe0461ed
+
+### Get all comments for a post
+GET http://localhost:3000/comments/post/67446f5fc021e06658eba6eb
