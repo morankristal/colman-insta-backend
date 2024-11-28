@@ -11,11 +11,14 @@ exports.addPost = async (req, res) => {
 };
 
 exports.getAllPosts = async (req, res) => {
+    const filter = req.query.sender;
     try {
-        const posts = await Post.find();
-        res.json(posts);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+        const posts = filter
+            ? await Post.find({ sender: filter })
+            : await Post.find();
+        res.status(200).json(posts);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
     }
 };
 
@@ -28,21 +31,6 @@ exports.getPostById = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
-
-exports.getPostsBySender = async (req, res) => {
-    try {
-        const sender = req.query.sender?.trim();
-
-        if (!sender) {
-            return res.status(400).json({ error: "Sender query parameter is required" });
-        }
-        const posts = await Post.find({ sender });
-        res.json(posts);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-};
-
 
 exports.updatePost = async (req, res) => {
     try {

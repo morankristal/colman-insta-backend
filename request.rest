@@ -61,17 +61,17 @@ GET http://localhost:3000/comments/674610ab9e759d2abe0461f2
 Content-Type: application/json
 
 ### Update Comment
-PUT http://localhost:3000/comments/674610ae9e759d2abe0461f4
+PUT http://localhost:3000/comments/674610ab9e759d2abe0461f2
 Content-Type: application/json
 
 {
   "post": "67446f5fc021e06658eba6eb",
-  "content": "This is an updated comment",
+  "content": "This is an updated comment!!",
   "sender": "Ronen"
 }
 
 ### Delete Comment
-DELETE http://localhost:3000/comments/674610ae9e759d2abe0461f4
+DELETE http://localhost:3000/comments/67484ed05831efdf5ecde423
 
 ### Get all comments for a post
 GET http://localhost:3000/comments/post/67446f5fc021e06658eba6eb
