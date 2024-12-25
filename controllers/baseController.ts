@@ -9,7 +9,7 @@ class BaseController<T> {
     }
 
     async getAll(req: Request, res: Response) {
-        const filter = req.query.owner; // Assuming a filter is possible (adjust as needed)
+        const filter = req.query.owner;
         try {
             const items = filter ? await this.model.find({ owner: filter }) : await this.model.find();
             res.status(200).send(items);
