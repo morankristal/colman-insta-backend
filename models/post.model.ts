@@ -1,6 +1,5 @@
 import { Schema, model, Document, Types } from 'mongoose';
 
-// Define an interface for the Post document
 export interface IPost extends Document {
     title: string;
     content: string;
@@ -8,7 +7,6 @@ export interface IPost extends Document {
     createdAt: Date;
 }
 
-// Define the schema for the Post model
 const postSchema = new Schema<IPost>({
     title: {
         type: String,
@@ -29,6 +27,5 @@ const postSchema = new Schema<IPost>({
     },
 });
 
-// Create and export the Post model
 const Post = model<IPost>('Post', postSchema);
 export default Post;

@@ -1,18 +1,14 @@
-import { Router } from 'express';
-import {
-    addComment,
-    getCommentByID,
-    updateComment,
-    deleteComment,
-    getCommentsByPostId,
-} from '../controllers/comment.controller';
+import { Router } from "express";
+import CommentModel, { IComment } from "../models/comment.model";
+import BaseController from "../controllers/baseController";
 
-const router: Router = Router();
+const commentController = new BaseController<IComment>(CommentModel);
+const router = Router();
 
-router.post('/', addComment);
-router.get('/:id', getCommentByID);
-router.put('/:id', updateComment);
-router.delete('/:id', deleteComment);
-router.get('/post/:postId', getCommentsByPostId);
+router.post("/", (req, res) => commentController.create(req, res));
+router.get("/", (req, res) => commentController.getAll(req, res));
+router.get("/:id", (req, res) => commentController.getById(req, res));
+router.put("/:id", (req, res) => commentController.update(req, res));
+router.delete("/:id", (req, res) => commentController.delete(req, res));
 
 export default router;

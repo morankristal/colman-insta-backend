@@ -1,6 +1,5 @@
 import { Schema, model, Document, Types } from 'mongoose';
 
-// Define an interface for the Comment document
 export interface IComment extends Document {
     post: Types.ObjectId; // Reference to the Post model
     content: string;
@@ -8,7 +7,6 @@ export interface IComment extends Document {
     createdAt: Date;
 }
 
-// Define the schema for the Comment model
 const commentSchema = new Schema<IComment>({
     post: {
         type: Schema.Types.ObjectId,
@@ -30,6 +28,5 @@ const commentSchema = new Schema<IComment>({
     },
 });
 
-// Create and export the Comment model
 const Comment = model<IComment>('Comment', commentSchema);
 export default Comment;
