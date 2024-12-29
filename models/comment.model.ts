@@ -1,10 +1,10 @@
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model, Document, Types } from 'mongoose';
 
 // Define an interface for the Comment document
 export interface IComment extends Document {
-    post: Schema.Types.ObjectId;
+    post: Types.ObjectId; // Reference to the Post model
     content: string;
-    sender: string;
+    sender: Types.ObjectId; // Reference to the User model
     createdAt: Date;
 }
 
@@ -12,7 +12,7 @@ export interface IComment extends Document {
 const commentSchema = new Schema<IComment>({
     post: {
         type: Schema.Types.ObjectId,
-        ref: 'Post',
+        ref: 'Post', // Reference to the Post model
         required: true,
     },
     content: {
@@ -20,7 +20,8 @@ const commentSchema = new Schema<IComment>({
         required: true,
     },
     sender: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: 'User', // Reference to the User model
         required: true,
     },
     createdAt: {

@@ -1,10 +1,10 @@
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model, Document, Types } from 'mongoose';
 
 // Define an interface for the Post document
 export interface IPost extends Document {
     title: string;
     content: string;
-    sender: string;
+    sender: Types.ObjectId; // Reference to the User model
     createdAt: Date;
 }
 
@@ -19,7 +19,8 @@ const postSchema = new Schema<IPost>({
         required: true,
     },
     sender: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: 'User', // Reference to the User model
         required: true,
     },
     createdAt: {
