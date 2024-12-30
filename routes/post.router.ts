@@ -1,15 +1,31 @@
-import { Router } from "express";
-import PostModel, { IPost } from "../models/post.model";
-import BaseController from "../controllers/baseController";
+import { Router, Request, Response } from "express";
+import postController from "../controllers/post.controller";
 
-const postController = new BaseController<IPost>(PostModel);
 const router = Router();
 
-router.get("/", (req, res) => postController.getAll(req, res));
-router.get("/:id", (req, res) => postController.getById(req, res));
-router.post("/", (req, res) => postController.create(req, res));
-router.put("/:id", (req, res) => postController.update(req, res));
-router.delete("/:id", (req, res) => postController.delete(req, res));
+// Get all posts
+router.get("/", async (req: Request, res: Response): Promise<void> => {
+    await postController.getAll(req, res);
+});
+
+// Get post by ID
+router.get("/:id", async (req: Request, res: Response): Promise<void> => {
+    await postController.getById(req, res);
+});
+
+// Create a new post
+router.post("/", async (req: Request, res: Response): Promise<void> => {
+    await postController.create(req, res);
+});
+
+// Update a post by ID
+router.put("/:id", async (req: Request, res: Response): Promise<void> => {
+    await postController.update(req, res);
+});
+
+// Delete a post by ID
+router.delete("/:id", async (req: Request, res: Response): Promise<void> => {
+    await postController.delete(req, res);
+});
 
 export default router;
-

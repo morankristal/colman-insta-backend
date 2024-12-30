@@ -1,31 +1,31 @@
 import { Router, Request, Response } from "express";
-import commentController from "../controllers/comment.controller";
+import userController from "../controllers/user.controller";
 
 const router = Router();
 
-// Get all comments
+// Get all users
 router.get("/", async (req: Request, res: Response): Promise<void> => {
-    await commentController.getAll(req, res);
+    await userController.getAll(req, res);
 });
 
-// Get comment by ID
+// Get user by ID
 router.get("/:id", async (req: Request, res: Response): Promise<void> => {
-    await commentController.getById(req, res);
+    await userController.getById(req, res);
 });
 
-// Create a new comment
+// Create a new user
 router.post("/", async (req: Request, res: Response): Promise<void> => {
-    await commentController.create(req, res);
+    await userController.create(req, res);
 });
 
-// Update a comment by ID
+// Update a user by ID
 router.put("/:id", async (req: Request, res: Response): Promise<void> => {
-    await commentController.update(req, res);
+    await userController.update(req, res);
 });
 
-// Delete a comment by ID
+// Delete a user by ID
 router.delete("/:id", async (req: Request, res: Response): Promise<void> => {
-    await commentController.delete(req, res);
+    await userController.delete(req, res);
 });
 
 export default router;

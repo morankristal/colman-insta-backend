@@ -1,38 +1,49 @@
-// models/user.model.ts
-import { Schema, model, Document, PreMiddlewareFunction } from "mongoose";
-import bcrypt from "bcrypt";
+import { Schema, model, Document } from 'mongoose';
+import bcrypt from 'bcrypt';
 
+// Define an interface for the User document
 export interface IUser extends Document {
     username: string;
     email: string;
     password: string;
-    posts: string[]; // References to Post IDs
-    comments: string[]; // References to Comment IDs
-    comparePassword(password: string): Promise<boolean>;
+    comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
-const userSchema = new Schema<IUser>(
-    {
-        username: { type: String, required: true, unique: true },
-        email: { type: String, required: true, unique: true },
-        password: { type: String, required: true },
-        posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
-        comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+// Define the schema for the User model
+const userSchema = new Schema<IUser>({
+    username: {
+        type: String,
+        required: true,
+        unique: true,  // Ensures that the username is unique
+        trim: true,
+        lowercase: true,
     },
-    { timestamps: true }
-);
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true,
+        lowercase: true,
+    },
+    password: {
+        type: String,
+        required: true,
+    },
+});
 
-// Pre-save middleware to hash the password
-userSchema.pre<IUser>("save", async function (next) {
-    if (!this.isModified("password")) return next();
+// Hash the password before saving the user
+userSchema.pre('save', async function (next) {
+    if (!this.isModified('password')) return next();
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
     next();
 });
 
-// Add method to compare passwords
-userSchema.methods.comparePassword = function (password: string): Promise<boolean> {
-    return bcrypt.compare(password, this.password);
+// Add a method to compare passwords
+userSchema.methods.comparePassword = function (candidatePassword: string): Promise<boolean> {
+    return bcrypt.compare(candidatePassword, this.password);
 };
 
-export default model<IUser>("User", userSchema);
+// Create and export the User model
+const User = model<IUser>('User', userSchema);
+export default User;
