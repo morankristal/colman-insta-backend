@@ -9,9 +9,8 @@ class BaseController<T> {
     }
 
     async getAll(req: Request, res: Response) {
-        const filter = req.query.owner;
         try {
-            const items = filter ? await this.model.find({ owner: filter }) : await this.model.find();
+            const items = await this.model.find();
             res.status(200).send(items);
         } catch (error) {
             res.status(400).send(error);
@@ -34,42 +33,49 @@ class BaseController<T> {
 
     async create(req: Request, res: Response) {
         const body = req.body;
+
         try {
             const item = await this.model.create(body);
-            console.log(item)
             res.status(201).send(item);
-        } catch (error) {
-            console.log(req.body)
-            res.status(400).send(error);
+        } catch (error: any) {
+            if (error.code === 11000) {
+                return res.status(400).send({ error: "Duplicate key error: Field must be unique" });
+            }
+            res.status(400).send({ error: error.message });
         }
     }
+
 
     async update(req: Request, res: Response) {
         const id = req.params.id;
         const updateData = req.body;
+
         try {
-            const item = await this.model.findByIdAndUpdate(id, updateData, { new: true });
-            if (item) {
-                res.status(200).send(item);
-            } else {
-                res.status(404).send("Not found");
+            const item = await this.model.findById(id);
+            if (!item) {
+                return res.status(404).send("Not found");
             }
+
+            const updatedItem = await this.model.findByIdAndUpdate(id, updateData, { new: true });
+            res.status(200).send(updatedItem);
         } catch (error) {
             res.status(400).send(error);
         }
     }
 
-    async delete(req: Request, res: Response) {
+    async delete(req: Request, res: Response): Promise<Response> {
         const id = req.params.id;
+
         try {
-            const item = await this.model.findByIdAndDelete(id);
-            if (item) {
-                res.status(200).send({ message: "Item deleted successfully" });
-            } else {
-                res.status(404).send("Not found");
+            const item = await this.model.findById(id);
+            if (!item) {
+                return res.status(404).send("Not found");
             }
+
+            await this.model.findByIdAndDelete(id);
+            return res.status(200).send({ message: "Item deleted successfully" });
         } catch (error) {
-            res.status(400).send(error);
+            return res.status(400).send(error);
         }
     }
 }

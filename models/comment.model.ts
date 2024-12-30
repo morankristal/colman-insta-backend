@@ -3,7 +3,7 @@ import { Schema, model, Document } from 'mongoose';
 export interface IComment extends Document {
     post: Schema.Types.ObjectId;
     content: string;
-    sender: string;
+    sender: Schema.Types.ObjectId;
     createdAt: Date;
 }
 
@@ -18,7 +18,8 @@ const commentSchema = new Schema<IComment>({
         required: true,
     },
     sender: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: 'User',
         required: true,
     },
     createdAt: {

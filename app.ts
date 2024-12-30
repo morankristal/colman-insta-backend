@@ -7,6 +7,7 @@ import bodyParser from 'body-parser';
 
 import postRouter from './routes/post.router';
 import commentRouter from './routes/comment.router';
+import userRouter from "./routes/user.router";
 
 const app: Application = express();
 
@@ -14,6 +15,7 @@ app.use(bodyParser.json());
 
 app.use('/posts', postRouter);
 app.use('/comments', commentRouter);
+app.use('/users', userRouter)
 
 mongoose
     .connect(process.env.MONGO_URI as string, {})

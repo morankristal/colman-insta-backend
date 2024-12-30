@@ -1,14 +1,26 @@
-import { Router } from "express";
-import CommentModel, { IComment } from "../models/comment.model";
-import BaseController from "../controllers/baseController";
+import { Router, Request, Response } from "express";
+import commentController from "../controllers/comment.controller";
 
-const commentController = new BaseController<IComment>(CommentModel);
 const router = Router();
 
-router.post("/", (req, res) => commentController.create(req, res));
-router.get("/", (req, res) => commentController.getAll(req, res));
-router.get("/:id", (req, res) => commentController.getById(req, res));
-router.put("/:id", (req, res) => commentController.update(req, res));
-router.delete("/:id", (req, res) => commentController.delete(req, res));
+router.get("/", async (req: Request, res: Response): Promise<void> => {
+    await commentController.getAll(req, res);
+});
+
+router.get("/:id", async (req: Request, res: Response): Promise<void> => {
+    await commentController.getById(req, res);
+});
+
+router.post("/", async (req: Request, res: Response): Promise<void> => {
+    await commentController.create(req, res);
+});
+
+router.put("/:id", async (req: Request, res: Response): Promise<void> => {
+    await commentController.update(req, res);
+});
+
+router.delete("/:id", async (req: Request, res: Response): Promise<void> => {
+    await commentController.delete(req, res);
+});
 
 export default router;
