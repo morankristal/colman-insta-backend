@@ -38,7 +38,7 @@ class BaseController<T> {
             const item = await this.model.create(body);
             res.status(201).send(item);
         } catch (error: any) {
-            if (error.code === 11000) { // קוד שגיאה עבור הפרת ייחודיות
+            if (error.code === 11000) {
                 return res.status(400).send({ error: "Duplicate key error: Field must be unique" });
             }
             res.status(400).send({ error: error.message });
@@ -47,8 +47,8 @@ class BaseController<T> {
 
 
     async update(req: Request, res: Response) {
-        const id = req.params.id;  // ה-ID שנשלח ב-URL
-        const updateData = req.body;  // המידע החדש לעדכון
+        const id = req.params.id;
+        const updateData = req.body;
 
         try {
             const item = await this.model.findById(id);
@@ -56,7 +56,6 @@ class BaseController<T> {
                 return res.status(404).send("Not found");
             }
 
-            // עדכון המידע
             const updatedItem = await this.model.findByIdAndUpdate(id, updateData, { new: true });
             res.status(200).send(updatedItem);
         } catch (error) {
@@ -65,7 +64,7 @@ class BaseController<T> {
     }
 
     async delete(req: Request, res: Response): Promise<Response> {
-        const id = req.params.id;  // ה-ID שנשלח ב-URL
+        const id = req.params.id;
 
         try {
             const item = await this.model.findById(id);

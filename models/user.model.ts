@@ -1,7 +1,6 @@
 import { Schema, model, Document } from 'mongoose';
 import bcrypt from 'bcrypt';
 
-// Define an interface for the User document
 export interface IUser extends Document {
     username: string;
     email: string;
@@ -9,7 +8,6 @@ export interface IUser extends Document {
     comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
-// Define the schema for the User model
 const userSchema = new Schema<IUser>({
     username: {
         type: String,
@@ -31,7 +29,6 @@ const userSchema = new Schema<IUser>({
     },
 });
 
-// Hash the password before saving the user
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();
     const salt = await bcrypt.genSalt(10);
@@ -39,11 +36,9 @@ userSchema.pre('save', async function (next) {
     next();
 });
 
-// Add a method to compare passwords
 userSchema.methods.comparePassword = function (candidatePassword: string): Promise<boolean> {
     return bcrypt.compare(candidatePassword, this.password);
 };
 
-// Create and export the User model
 const User = model<IUser>('User', userSchema);
 export default User;
