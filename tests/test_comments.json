@@ -1,0 +1,17 @@
+[
+  {
+    "post": "647f6d5b6f3854e44c8e7e9d",
+    "content": "This is a comment",
+    "sender": "647f6d5b6f3854e44c8e7e9e"
+  },
+  {
+    "post": "647f6d5b6f3854e44c8e7e9d",
+    "content": "This is another comment",
+    "sender": "647f6d5b6f3854e44c8e7e9e"
+  },
+  {
+    "post": "647f6d5b6f3854e44c8e7e9f",
+    "content": "This is a comment for another post",
+    "sender": "647f6d5b6f3854e44c8e7e9f"
+  }
+]
