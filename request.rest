@@ -66,7 +66,7 @@ Content-Type: application/json
 {
   "title": "My First Post22",
   "content": "This is the content of the first post",
-  "sender": "67727f7879035b604eb54171"
+  "sender": "888f888f8f8888f88f8f8f8f"
 }
 
 ###
@@ -109,9 +109,9 @@ POST http://localhost:3000/comments
 Content-Type: application/json
 
 {
-  "post": "67727fb279035b604eb5417b",
+  "post": "6773d651d52d04769e6b9bf5",
   "content": "This is a comment",
-  "sender": "67727f7879035b604eb54171"
+  "sender": "6773d64f85a9a2be3874bf9a"
 }
 
 ###

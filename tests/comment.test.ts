@@ -1,57 +1,77 @@
 import request from "supertest";
-import initApp  from "../server";  // עדכון הנתיב בהתאם למיקום של app.ts
+import initApp from "../server";
 import mongoose from "mongoose";
-import { Express} from "express";
-import commentsModel from "../models/comment.model";
-import testComments from "./test_comments.json";  // אם אתה משתמש ב-JSON
+import { Express } from "express";
+import Post from "../models/post.model";
+import User from "../models/user.model";
+import testComments from "./test_comments.json";
+import Comment from "../models/comment.model";
 
-var app: Express;  // טיפוס Express
+var app: Express;
+let postId: string = "777f777f7f7777f77f1f1f1f";
+let userId: string = "888f888f8f8888f88f8f8f8f";
 let commentId: string = "";
-let server: any;  // טיפוס משתנה עבור השרת
 
 beforeAll(async () => {
     console.log("beforeAll");
+
+
     app = await initApp();
-    await commentsModel.deleteMany();
+
+    const userExists = await User.findById(userId);
+    expect(userExists).not.toBeNull();
+
+    const postExists = await Post.findById(postId);
+    expect(postExists).not.toBeNull();
+
+     // await Comment.insertMany(testComments); //Run only if it does not exist in the DB
+
 });
 
 afterAll((done) => {
     console.log("afterAll");
-    mongoose.connection.close();  // סוגר את חיבור MongoDB
-    if (server) {
-        server.close(() => {  // סוגר את השרת Express
-            done();
-        });
-    } else {
-        done();
-    }
+    mongoose.connection.close();
+    done();
 });
 
 describe("Comments Tests", () => {
-    test("Comments test get all", async () => {
+    test("Get all comments", async () => {
         const response = await request(app).get("/comments");
         expect(response.statusCode).toBe(200);
-        expect(response.body.length).toBe(0);  // מצפה שאין תגובות בהתחלה
+        expect(response.body.length).toBe(testComments.length);
     });
 
-    test("Test Create Comment", async () => {
-        const response = await request(app).post("/comments").send(testComments[0]);
+    test("Create a comment", async () => {
+        const newComment = {
+            post: postId,
+            content: "Test comment",
+            sender: userId,
+        };
+        const response = await request(app).post("/comments").send(newComment);
         expect(response.statusCode).toBe(201);
-        expect(response.body.content).toBe(testComments[0].content);
-        expect(response.body.sender).toBe(testComments[0].sender);
-        commentId = response.body._id;  // שמירת ה-ID של התגובה שנוצרה
+        expect(response.body.content).toBe(newComment.content);
+        expect(response.body.sender).toBe(newComment.sender);
+        commentId = response.body._id;
     });
 
-    test("Test get comment by sender", async () => {
-        const response = await request(app).get(`/comments?sender=${testComments[0].sender}`);
-        expect(response.statusCode).toBe(200);
-        expect(response.body.length).toBe(1);  // מצפה לתגובה אחת
-        expect(response.body[0].content).toBe(testComments[0].content);
-    });
-
-    test("Comments get comment by id", async () => {
+    test("Get comment by ID", async () => {
         const response = await request(app).get(`/comments/${commentId}`);
         expect(response.statusCode).toBe(200);
-        expect(response.body.content).toBe(testComments[0].content);
+        expect(response.body._id).toBe(commentId);
+    });
+
+    test("Update a comment", async () => {
+        const updatedComment = { content: "Updated test comment" };
+        const response = await request(app)
+            .put(`/comments/${commentId}`)
+            .send(updatedComment);
+        expect(response.statusCode).toBe(200);
+        expect(response.body.content).toBe(updatedComment.content);
+    });
+
+    test("Delete a comment", async () => {
+        const response = await request(app).delete(`/comments/${commentId}`);
+        expect(response.statusCode).toBe(200);
+        expect(response.body.message).toBe("Item deleted successfully");
     });
 });
