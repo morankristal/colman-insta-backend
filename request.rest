@@ -9,7 +9,7 @@ Content-Type: application/json
 ###
 
 # Get user by ID
-GET http://localhost:3000/users/67713f2a9557b0405a858d8b
+GET http://localhost:3000/users/67727f7879035b604eb54171
 Content-Type: application/json
 
 ###
@@ -19,19 +19,19 @@ POST http://localhost:3000/users
 Content-Type: application/json
 
 {
-  "username": "john.doe132",
-  "email": "john123.doe@example.com",
+  "username": "moran.doe132",
+  "email": "moran.doe@example.com",
   "password": "password123"
 }
 
 ###
 
 # Update a user by ID
-PUT http://localhost:3000/users/67713f2a9557b0405a858d8b
+PUT http://localhost:3000/users/67727f7879035b604eb54171
 Content-Type: application/json
 
 {
-  "username": "john.updated",
+  "username": "123123.updated",
   "email": "john.updated@example.com"
 }
 
@@ -54,7 +54,7 @@ Content-Type: application/json
 ###
 
 # Get post by ID
-GET http://localhost:3000/posts/677135e1f78c0cdb155faad5
+GET http://localhost:3000/posts/67727fad79035b604eb54179
 Content-Type: application/json
 
 ###
@@ -64,15 +64,15 @@ POST http://localhost:3000/posts
 Content-Type: application/json
 
 {
-  "title": "My First Post",
+  "title": "My First Post22",
   "content": "This is the content of the first post",
-  "sender": "67713f319557b0405a858d8e"
+  "sender": "888f888f8f8888f88f8f8f8f"
 }
 
 ###
 
 # Update a post by ID
-PUT http://localhost:3000/posts/677135e1f78c0cdb155faad5
+PUT http://localhost:3000/posts/67727fad79035b604eb54179
 Content-Type: application/json
 
 {
@@ -83,7 +83,7 @@ Content-Type: application/json
 ###
 
 # Delete a post by ID
-DELETE http://localhost:3000/posts/677135e1f78c0cdb155faad5
+DELETE http://localhost:3000/posts/67727fad79035b604eb54179
 Content-Type: application/json
 
 ###
@@ -99,7 +99,7 @@ Content-Type: application/json
 ###
 
 # Get comment by ID
-GET http://localhost:3000/comments/67713657f78c0cdb155faae1
+GET http://localhost:3000/comments/67727fec79035b604eb54186
 Content-Type: application/json
 
 ###
@@ -109,15 +109,15 @@ POST http://localhost:3000/comments
 Content-Type: application/json
 
 {
-  "post": "676ae7a421b4992a82ae7a18",
+  "post": "6773d651d52d04769e6b9bf5",
   "content": "This is a comment",
-  "sender": "6771351ff78c0cdb155faabe"
+  "sender": "6773d64f85a9a2be3874bf9a"
 }
 
 ###
 
 # Update a comment by ID
-PUT http://localhost:3000/comments/67713657f78c0cdb155faae1
+PUT http://localhost:3000/comments/67727fec79035b604eb54186
 Content-Type: application/json
 
 {
@@ -127,5 +127,5 @@ Content-Type: application/json
 ###
 
 # Delete a comment by ID
-DELETE http://localhost:3000/comments/67713657f78c0cdb155faae1
+DELETE http://localhost:3000/comments/67727fec79035b604eb54186
 Content-Type: application/json

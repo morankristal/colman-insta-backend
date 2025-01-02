@@ -1,0 +1,17 @@
+[
+  {
+    "post": "777f777f7f7777f77f1f1f1f",
+    "content": "This is a comment",
+    "sender": "123f123f1f1234f12f1f1f1f"
+  },
+  {
+    "post": "999f999f9f9999f99f9f9f9f",
+    "content": "This is another comment",
+    "sender": "888f888f8f8888f88f8f8f8f"
+  },
+  {
+    "post": "999f999f9f9999f99f9f9f9f",
+    "content": "This is a comment for another post",
+    "sender": "123f123f1f1234f12f1f1f1f"
+  }
+]
