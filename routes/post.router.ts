@@ -1,7 +1,9 @@
 import { Router, Request, Response } from "express";
-import postController from "../controllers/post.controller";
-
+import PostController from "../controllers/post.controller";
+import { authMiddleware } from "../common/authentication_middleware";
 const router = Router();
+
+const postController = new PostController();
 
 router.get("/", async (req: Request, res: Response): Promise<void> => {
     await postController.getAll(req, res);
@@ -11,15 +13,15 @@ router.get("/:id", async (req: Request, res: Response): Promise<void> => {
     await postController.getById(req, res);
 });
 
-router.post("/", async (req: Request, res: Response): Promise<void> => {
+router.post("/", authMiddleware, async (req: Request, res: Response): Promise<void> => {
     await postController.create(req, res);
 });
 
-router.put("/:id", async (req: Request, res: Response): Promise<void> => {
+router.put("/:id", authMiddleware, async (req: Request, res: Response): Promise<void> => {
     await postController.update(req, res);
 });
 
-router.delete("/:id", async (req: Request, res: Response): Promise<void> => {
+router.delete("/:id", authMiddleware, async (req: Request, res: Response): Promise<void> => {
     await postController.delete(req, res);
 });
 

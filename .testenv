@@ -1,0 +1,5 @@
+MONGO_URI=mongodb+srv://moran:12345@cluster0.zvtx7.mongodb.net/
+PORT=3000
+TOKEN_SECRET= c51c41a352c64f067a3e40cc5bbabf2a42ef696d740239401c30d3ae2df9fbf4fe4645e790df1b57cbd83cea13fe624baf95f038ef5ad30030e0eaa86b7dc7fe
+TOKEN_EXPIRES = '3s'
+REFRESH_TOKEN_EXPIRES = '7d'

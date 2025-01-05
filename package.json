@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --passWithNoTests",
+    "test": "jest --detectOpenHandles --passWithNoTests --runInBand",
+    "testAuth": "jest --detectOpenHandles --forceExit auth.test.ts",
+    "testPost": "jest --detectOpenHandles --forceExit post.test.ts",
+    "testComment": "jest --detectOpenHandles --forceExit comment.test.ts",
+    "testUser": "jest --detectOpenHandles --forceExit user.test.ts",
     "test:watch": "jest --watchAll"
   },
   "keywords": [],
@@ -15,12 +19,14 @@
     "body-parser": "^1.20.3",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
+    "@types/jsonwebtoken": "^9.0.7",
     "@types/supertest": "^6.0.2",
     "jest": "^29.7.0",
     "nodemon": "^3.1.7",

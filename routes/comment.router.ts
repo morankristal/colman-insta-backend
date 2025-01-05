@@ -1,7 +1,10 @@
 import { Router, Request, Response } from "express";
-import commentController from "../controllers/comment.controller";
+import CommentController from "../controllers/comment.controller";
+import { authMiddleware } from "../common/authentication_middleware";
 
 const router = Router();
+
+const commentController = new CommentController();
 
 router.get("/", async (req: Request, res: Response): Promise<void> => {
     await commentController.getAll(req, res);
@@ -11,15 +14,15 @@ router.get("/:id", async (req: Request, res: Response): Promise<void> => {
     await commentController.getById(req, res);
 });
 
-router.post("/", async (req: Request, res: Response): Promise<void> => {
+router.post("/", authMiddleware, async (req: Request, res: Response): Promise<void> => {
     await commentController.create(req, res);
 });
 
-router.put("/:id", async (req: Request, res: Response): Promise<void> => {
+router.put("/:id", authMiddleware, async (req: Request, res: Response): Promise<void> => {
     await commentController.update(req, res);
 });
 
-router.delete("/:id", async (req: Request, res: Response): Promise<void> => {
+router.delete("/:id", authMiddleware, async (req: Request, res: Response): Promise<void> => {
     await commentController.delete(req, res);
 });
 

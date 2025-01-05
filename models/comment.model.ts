@@ -51,7 +51,7 @@ commentSchema.pre('save', async function (next) {
         const error = new Error('Post does not exist');
         return next(error);
     }
-
+    
     const userExists = await mongoose.model('User').findById(this.sender);
     if (!userExists) {
         const error = new Error('Sender does not exist');

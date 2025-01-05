@@ -7,6 +7,7 @@ export interface IUser extends Document {
     password: string;
     comparePassword(candidatePassword: string): Promise<boolean>;
     _id: string;
+    refreshToken: string[];
 }
 
 const userSchema = new Schema<IUser>({
@@ -27,6 +28,10 @@ const userSchema = new Schema<IUser>({
     password: {
         type: String,
         required: true,
+    },
+    refreshToken: {
+        type: [String],
+        default: [],
     },
 });
 
