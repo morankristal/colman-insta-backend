@@ -33,7 +33,6 @@ class BaseController<T> {
 
     async create(req: Request, res: Response) {
         const body = req.body;
-
         try {
             const item = await this.model.create(body);
             res.status(201).send(item);
@@ -49,13 +48,14 @@ class BaseController<T> {
     async update(req: Request, res: Response) {
         const id = req.params.id;
         const updateData = req.body;
-
+        
         try {
             const item = await this.model.findById(id);
             if (!item) {
                 return res.status(404).send("Not found");
             }
 
+            // if(req.params.userId && req.params.userId !== item.sender)
             const updatedItem = await this.model.findByIdAndUpdate(id, updateData, { new: true });
             res.status(200).send(updatedItem);
         } catch (error) {

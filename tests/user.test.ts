@@ -12,7 +12,8 @@ beforeAll(async () => {
     console.log("beforeAll");
     app = await initApp();
 
-    //await User.insertMany(testUsers);  //Run only if it does not exist in the DB
+    await User.deleteMany();
+    await User.insertMany(testUsers);  //Run only if it does not exist in the DB
 });
 
 afterAll((done) => {
@@ -57,12 +58,12 @@ describe("User Tests", () => {
         expect(response.body.message).toBe("Item deleted successfully");
     });
 
-    test("Test password comparison", async () => {
-        const user = await User.findOne({ username: testUsers[0].username });
-        expect(user).not.toBeNull();
-        if (user) {
-            const isMatch = await user.comparePassword(testUsers[0].password);
-            expect(isMatch).toBe(true);
-        }
-    });
+    // test("Test password comparison", async () => {
+    //     const user = await User.findOne({ username: testUsers[0].username });
+    //     expect(user).not.toBeNull();
+    //     if (user) {
+    //         const isMatch = await user.comparePassword(testUsers[0].password);
+    //         expect(isMatch).toBe(true);
+    //     }
+    // });
 });

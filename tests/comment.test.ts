@@ -3,29 +3,62 @@ import initApp from "../server";
 import mongoose from "mongoose";
 import { Express } from "express";
 import Post from "../models/post.model";
-import User from "../models/user.model";
+import User, { IUser } from "../models/user.model";
 import testComments from "./test_comments.json";
+import testUsers from "./test_users.json";
+import testPosts from "./test_posts.json";
 import Comment from "../models/comment.model";
 
 var app: Express;
 let postId: string = "777f777f7f7777f77f1f1f1f";
-let userId: string = "888f888f8f8888f88f8f8f8f";
 let commentId: string = "";
+
+type User = IUser & {
+    accessToken?: string,
+    refreshToken?: string
+    userId?: string
+  };
+
+const testUser: Partial<User> = {
+  username: "testuser",
+  email: "test@user.com",
+  password: "testpassword",
+}
 
 beforeAll(async () => {
     console.log("beforeAll");
 
-
     app = await initApp();
 
-    const userExists = await User.findById(userId);
-    expect(userExists).not.toBeNull();
+    // האם צריך את זה?
+    // const userExists = await User.findById(userId); 
+    // expect(userExists).not.toBeNull();
 
-    const postExists = await Post.findById(postId);
-    expect(postExists).not.toBeNull();
+    // const postExists = await Post.findById(postId);
+    // expect(postExists).not.toBeNull();
 
-     // await Comment.insertMany(testComments); //Run only if it does not exist in the DB
+    await User.deleteMany();
+    await Comment.deleteMany();
+    await Post.deleteMany();
+    await User.insertMany(testUsers); //Run only if it does not exist in the DB
+    await Post.insertMany(testPosts); //Run only if it does not exist in the DB
+    await Comment.insertMany(testComments); //Run only if it does not exist in the DB
 
+    const res = await request(app).post('/auth/register').send(testUser)
+    testUser.id = res.body._id
+
+});
+
+async function loginUser() {
+    const response = await request(app).post('/auth/login').send({
+    "username": "testuser",
+    "password": "testpassword"
+    })
+    testUser.accessToken = response.body.accessToken
+};
+   
+beforeEach(async ()=>{
+    await loginUser()
 });
 
 afterAll((done) => {
@@ -45,9 +78,15 @@ describe("Comments Tests", () => {
         const newComment = {
             post: postId,
             content: "Test comment",
-            sender: userId,
+            sender: testUser.id,
         };
-        const response = await request(app).post("/comments").send(newComment);
+
+        const failresponse = await request(app).post("/comments").send(newComment);
+        expect(failresponse.statusCode).not.toBe(201);
+        
+        const response = await request(app).post("/comments").set(
+            { authorization: "JWT " + testUser.accessToken })
+            .send(newComment);
         expect(response.statusCode).toBe(201);
         expect(response.body.content).toBe(newComment.content);
         expect(response.body.sender).toBe(newComment.sender);
@@ -63,14 +102,16 @@ describe("Comments Tests", () => {
     test("Update a comment", async () => {
         const updatedComment = { content: "Updated test comment" };
         const response = await request(app)
-            .put(`/comments/${commentId}`)
+            .put(`/comments/${commentId}`).set(
+            { authorization: "JWT " + testUser.accessToken })
             .send(updatedComment);
         expect(response.statusCode).toBe(200);
         expect(response.body.content).toBe(updatedComment.content);
     });
 
     test("Delete a comment", async () => {
-        const response = await request(app).delete(`/comments/${commentId}`);
+        const response = await request(app).delete(`/comments/${commentId}`).set(
+            { authorization: "JWT " + testUser.accessToken });
         expect(response.statusCode).toBe(200);
         expect(response.body.message).toBe("Item deleted successfully");
     });

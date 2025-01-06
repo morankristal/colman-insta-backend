@@ -1,11 +1,16 @@
 import dotenv from "dotenv";
-dotenv.config();
+if (process.env.NODE_ENV == 'test'){
+    dotenv.config({ path: './.testenv' })
+   } else {
+    dotenv.config()
+}
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import express, { Express } from "express";
 import postRouter from "./routes/post.router";
 import commentRouter from "./routes/comment.router";
 import userRouter from "./routes/user.router";
+import authRouter from "./routes/auth.router";
 
 const app: Express = express();
 
@@ -13,6 +18,7 @@ app.use(bodyParser.json());
 app.use("/posts", postRouter);
 app.use("/comments", commentRouter);
 app.use("/users", userRouter);
+app.use("/auth", authRouter);
 
 const db = mongoose.connection;
 db.on("error", (error) => console.error(error));
