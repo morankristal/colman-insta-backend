@@ -11,10 +11,6 @@ router.get("/:id", async (req: Request, res: Response): Promise<void> => {
     await userController.getById(req, res);
 });
 
-router.post("/", async (req: Request, res: Response): Promise<void> => {
-    await userController.create(req, res);
-});
-
 router.put("/:id", async (req: Request, res: Response): Promise<void> => {
     await userController.update(req, res);
 });

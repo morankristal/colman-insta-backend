@@ -32,7 +32,11 @@ class BaseController<T> {
     }
 
     async create(req: Request, res: Response) {
-        const body = req.body;
+        const userId = req.params.userId;
+        if (!userId) {
+            return res.status(401).send({ error: "Unauthorized: User ID is missing" });
+        }
+        const body = { ...req.body, sender: userId };
         try {
             const item = await this.model.create(body);
             res.status(201).send(item);

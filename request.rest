@@ -146,18 +146,6 @@ Content-Type: application/json
 
 ###
 
-# Create a new user
-POST http://localhost:3000/users
-Content-Type: application/json
-
-{
-  "username": "moran.doe132",
-  "email": "moran.doe@example.com",
-  "password": "password123"
-}
-
-###
-
 # Update a user by ID
 PUT http://localhost:3000/users/677d10254a31a39d179518fa
 Content-Type: application/json
@@ -197,9 +185,8 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdkMTE1ZDRhMzFhMzlkMTc5NTE5MTUiLCJyYW5kb20iOiIwLjU4NjI0ODI5MzIzNDQyODIiLCJpYXQiOjE3MzYyNTQ0NjYsImV4cCI6MTczNjg1OTI2Nn0.u-12FCfSrQZuaEdgJ55biyDSY0Cx9X_uU49yA-bJ7c8
 
 {
-  "title": "בדיקה",
-  "content": "This is the content of the first post",
-  "sender": "677d115d4a31a39d17951915"
+  "title": "בדיקה 2",
+  "content": "This is the content of the first post"
 }
 
 
@@ -207,7 +194,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdkMTE1Z
 
 # Update a post by ID
 
-PUT http://localhost:3000/posts/677d13f24a31a39d1795192c
+PUT http://localhost:3000/posts/677d276f7ecd90ee74a2aff0
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdkMTE1ZDRhMzFhMzlkMTc5NTE5MTUiLCJyYW5kb20iOiIwLjIyODMwMTAxNzg1OTIyMDIiLCJpYXQiOjE3MzYyNTAwMTMsImV4cCI6MTczNjUwOTIxM30.yJ14md7SQ79kPfEzN7P6OEtJPEWJjFmJSul1SEZgPyI
 
@@ -283,9 +270,9 @@ POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-  "username": "moran",
-  "email": "moran@example.com",
-  "password": "password"
+  "username": "moran11",
+  "email": "moran11@example.com",
+  "password": "password11"
 }
 
 ###
@@ -311,7 +298,7 @@ Content-Type: application/json
 
 
 {
-    "refreshToken" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdkMTE1ZDRhMzFhMzlkMTc5NTE5MTUiLCJyYW5kb20iOiIwLjY4ODgwODQ0OTQzNzkzMDMiLCJpYXQiOjE3MzYyNDk3NDEsImV4cCI6MTczNjg1NDU0MX0.gG1267OmK08Rpi2fBkXRJXoi5bA1mXSWhHJpeGIph_Y"
+    "refreshToken" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdjMTZhNDAxMTU3MWFiOTY5NjAwYjYiLCJyYW5kb20iOiIwLjIwNTIxMjI3MDQzOTU0NjI2IiwiaWF0IjoxNzM2MjQ5NjMyLCJleHAiOjE3MzY4NTQ0MzJ9.4eOwFVJi6wNSsasaYfSWjMa-y7HbTrxxoX_AvTkrOQ4"
 }
 
 ###
