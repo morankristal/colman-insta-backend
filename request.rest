@@ -194,10 +194,10 @@ Content-Type: application/json
 # Create a new post
 POST http://localhost:3000/posts
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdkMTE1ZDRhMzFhMzlkMTc5NTE5MTUiLCJyYW5kb20iOiIwLjIyODMwMTAxNzg1OTIyMDIiLCJpYXQiOjE3MzYyNTAwMTMsImV4cCI6MTczNjUwOTIxM30.yJ14md7SQ79kPfEzN7P6OEtJPEWJjFmJSul1SEZgPyI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdkMTE1ZDRhMzFhMzlkMTc5NTE5MTUiLCJyYW5kb20iOiIwLjU4NjI0ODI5MzIzNDQyODIiLCJpYXQiOjE3MzYyNTQ0NjYsImV4cCI6MTczNjg1OTI2Nn0.u-12FCfSrQZuaEdgJ55biyDSY0Cx9X_uU49yA-bJ7c8
 
 {
-  "title": "My First Post22",
+  "title": "בדיקה",
   "content": "This is the content of the first post",
   "sender": "677d115d4a31a39d17951915"
 }
@@ -221,7 +221,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdkMTE1Z
 
 # Delete a post by ID
 
-DELETE http://localhost:3000/posts/677d13034a31a39d1795191c
+DELETE http://localhost:3000/posts/677d13f24a31a39d1795192c
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdkMTE1ZDRhMzFhMzlkMTc5NTE5MTUiLCJyYW5kb20iOiIwLjIyODMwMTAxNzg1OTIyMDIiLCJpYXQiOjE3MzYyNTAwMTMsImV4cCI6MTczNjUwOTIxM30.yJ14md7SQ79kPfEzN7P6OEtJPEWJjFmJSul1SEZgPyI
 
@@ -251,25 +251,25 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdkMTE1Z
 
 {
   "post": "999f999f9f9999f99f9f9f9f",
-  "content": "This is a comment",
+  "content": "בדיקה",
   "sender": "677d115d4a31a39d17951915"
 }
 
 ###
 
 # Update a comment by ID
-PUT http://localhost:3000/comments/677d15554a31a39d17951942
+PUT http://localhost:3000/comments/677acc1207c74b1f9918cd31
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdkMTE1ZDRhMzFhMzlkMTc5NTE5MTUiLCJyYW5kb20iOiIwLjIyODMwMTAxNzg1OTIyMDIiLCJpYXQiOjE3MzYyNTAwMTMsImV4cCI6MTczNjUwOTIxM30.yJ14md7SQ79kPfEzN7P6OEtJPEWJjFmJSul1SEZgPyI
 
 {
-  "content": "This is the updated comment"
+  "content": "בדיקה 2"
 }
 
 ###
 
 # Delete a comment by ID
-DELETE http://localhost:3000/comments/677d15484a31a39d1795193c
+DELETE http://localhost:3000/comments/677d24dfbc3303c023034ce4
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdkMTE1ZDRhMzFhMzlkMTc5NTE5MTUiLCJyYW5kb20iOiIwLjIyODMwMTAxNzg1OTIyMDIiLCJpYXQiOjE3MzYyNTAwMTMsImV4cCI6MTczNjUwOTIxM30.yJ14md7SQ79kPfEzN7P6OEtJPEWJjFmJSul1SEZgPyI
 

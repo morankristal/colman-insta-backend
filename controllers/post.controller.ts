@@ -32,6 +32,28 @@ class PostController extends BaseController<IPost> {
             res.status(400).send(error);
         }
     }
+
+
+    async delete(req: Request, res: Response): Promise<Response> {
+        const id = req.params.id;
+        const userId = req.params.userId;
+
+        try {
+            const item = await this.model.findById(id);
+            if (!item) {
+                return res.status(404).send("Not found");
+            }
+
+            if (userId && userId !== item.sender.toString()) {
+                return res.status(403).send("You are not authorized to delete this post");
+            }
+
+            await this.model.findByIdAndDelete(id);
+            return res.status(200).send({ message: "Post deleted successfully" });
+        } catch (error) {
+            return res.status(400).send(error);
+        }
+    }
 }
 
 export default PostController;

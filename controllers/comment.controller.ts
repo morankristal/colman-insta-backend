@@ -13,14 +13,13 @@ class CommentController extends BaseController<IComment> {
         const updateData = req.body;
         const userId = req.params.userId;
 
-        console.log(req.params.userId)
         try {
             const item = await this.model.findById(id);
             if (!item) {
                 return res.status(404).send("Not found");
             }
 
-            if(userId && userId !== item.sender.toString()){
+            if (userId && userId !== item.sender.toString()) {
                 return res.status(403).send("You are not authorized to update this comment");
             }
 
@@ -28,6 +27,27 @@ class CommentController extends BaseController<IComment> {
             res.status(200).send(updatedItem);
         } catch (error) {
             res.status(400).send(error);
+        }
+    }
+
+    async delete(req: Request, res: Response): Promise<Response> {
+        const id = req.params.id;
+        const userId = req.params.userId;
+
+        try {
+            const item = await this.model.findById(id);
+            if (!item) {
+                return res.status(404).send("Not found");
+            }
+
+            if (userId && userId !== item.sender.toString()) {
+                return res.status(403).send("You are not authorized to delete this comment");
+            }
+
+            await this.model.findByIdAndDelete(id);
+            return res.status(200).send({ message: "Comment deleted successfully" });
+        } catch (error) {
+            return res.status(400).send(error);
         }
     }
 }
