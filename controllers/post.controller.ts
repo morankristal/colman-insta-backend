@@ -54,6 +54,22 @@ class PostController extends BaseController<IPost> {
             return res.status(400).send(error);
         }
     }
+
+    async getPostsBySender(req: Request, res: Response) {
+        const userId = req.params.senderId;
+
+        try {
+            const posts = await this.model.find({ sender: userId });
+
+            if (posts.length === 0) {
+                return res.status(404).send("No posts found for this sender");
+            }
+
+            res.status(200).send(posts);
+        } catch (error) {
+            res.status(400).send(error);
+        }
+    }
 }
 
 export default PostController;

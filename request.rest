@@ -44,13 +44,19 @@ Content-Type: application/json
 
 ###
 
+# Get Post By User ID
+GET http://localhost:3000/posts/getBySender/677d40e4c12024407a33eb5a
+Content-Type: application/json
+
+###
+
 # Create a new post
 POST http://localhost:3000/posts
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdkMTE1ZDRhMzFhMzlkMTc5NTE5MTUiLCJyYW5kb20iOiIwLjU4NjI0ODI5MzIzNDQyODIiLCJpYXQiOjE3MzYyNTQ0NjYsImV4cCI6MTczNjg1OTI2Nn0.u-12FCfSrQZuaEdgJ55biyDSY0Cx9X_uU49yA-bJ7c8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdkNDBlNGMxMjAyNDQwN2EzM2ViNWEiLCJyYW5kb20iOiIwLjUzMzI1NDE0NTU1NzM0NTgiLCJpYXQiOjE3MzYyNjE4ODgsImV4cCI6MTczNjg2NjY4OH0.auGmuOVEnBHHkJsrOxaP3V9seBJejnxn8eoa5ipLVKM
 
 {
-  "title": "בדיקה 2",
+  "title": "בדיקה 1",
   "content": "This is the content of the first post"
 }
 
@@ -151,8 +157,8 @@ Content-Type: application/json
 
 
 {
-  "username": "moran",
-  "password": "password"
+  "username": "moran123",
+  "password": "password11"
 }
 
 ###

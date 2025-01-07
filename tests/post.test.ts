@@ -86,6 +86,14 @@ describe("Post Tests", () => {
         expect(response.body._id).toBe(postId);
     });
 
+    test("Get posts by sender", async () => {
+        const response = await request(app).get(`/posts/getBySender/${testUser.id}`).set(
+            { authorization: "JWT " + testUser.accessToken });
+        expect(response.statusCode).toBe(200);
+        expect(response.body.length).toBe(1);
+    });
+
+
     test("Update a post", async () => {
         const updatedPost = { title: "Updated Post Title", content: "Updated post content" };
         const response = await request(app)

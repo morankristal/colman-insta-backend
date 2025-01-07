@@ -13,6 +13,10 @@ router.get("/:id", async (req: Request, res: Response): Promise<void> => {
     await postController.getById(req, res);
 });
 
+router.get("/getBySender/:senderId", async (req: Request, res: Response): Promise<void> => {
+    await postController.getPostsBySender(req, res);
+});
+
 router.post("/", authMiddleware, async (req: Request, res: Response): Promise<void> => {
     await postController.create(req, res);
 });
