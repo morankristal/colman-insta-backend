@@ -7,12 +7,18 @@ if (process.env.NODE_ENV == 'test'){
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import express, { Express } from "express";
-import postRouter from "./routes/post.router";
-import commentRouter from "./routes/comment.router";
-import userRouter from "./routes/user.router";
-import authRouter from "./routes/auth.router";
+import postRouter from "./src/routes/post.router";
+import commentRouter from "./src/routes/comment.router";
+import userRouter from "./src/routes/user.router";
+import authRouter from "./src/routes/auth.router";
+import swaggerUi from "swagger-ui-express";
+import swaggerJsDoc from "swagger-jsdoc";
+import swaggerOptions from "./swagger";
 
 const app: Express = express();
+
+const swaggerSpec = swaggerJsDoc(swaggerOptions);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(bodyParser.json());
 app.use("/posts", postRouter);
