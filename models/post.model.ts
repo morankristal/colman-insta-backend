@@ -6,7 +6,7 @@ export interface IPost extends Document {
     content: string;
     sender: Schema.Types.ObjectId;
     createdAt: Date;
-    _id: string
+    _id: string;
 }
 
 const postSchema = new Schema<IPost>({

@@ -8,6 +8,7 @@ export interface IUser extends Document {
     comparePassword(candidatePassword: string): Promise<boolean>;
     _id: string;
     refreshToken: string[];
+    profilePicture: string;
 }
 
 const userSchema = new Schema<IUser>({
@@ -32,6 +33,10 @@ const userSchema = new Schema<IUser>({
     refreshToken: {
         type: [String],
         default: [],
+    },
+    profilePicture: {
+        type: String,
+        default: '',
     },
 });
 

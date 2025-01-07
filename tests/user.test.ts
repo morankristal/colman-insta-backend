@@ -30,11 +30,13 @@ describe("User Tests", () => {
     });
 
     test("Test Create User", async () => {
-        const newUser = { username: "unique_user", email: "unique_user@example.com", password: "secure_password" };
+        const newUser = { username: "unique_user", email: "unique_user@example.com", password: "secure_password", profilePicture: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.com%2Ficon%2Favatar_266033&psig=AOvVaw2QulK1YcmpEdM3cN7scACn&ust=1736347053441000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCIiUhP7q44oDFQAAAAAdAAAAABAE",
+        };
         const response = await request(app).post("/auth/register").send(newUser);
         expect(response.statusCode).toBe(200);
         expect(response.body.username).toBe(newUser.username);
         expect(response.body.email).toBe(newUser.email);
+        expect(response.body.profilePicture).toBe(newUser.profilePicture);
         userId = response.body._id;
     });
 

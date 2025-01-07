@@ -32,6 +32,8 @@ const testUser: Partial<User> = {
   username: "testuser",
   email: "test@user.com",
   password: "testpassword",
+  profilePicture: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.com%2Ficon%2Favatar_266033&psig=AOvVaw2QulK1YcmpEdM3cN7scACn&ust=1736347053441000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCIiUhP7q44oDFQAAAAAdAAAAABAE",
+
 }
 
 describe("Auth Tests", () => {
