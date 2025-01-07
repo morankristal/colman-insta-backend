@@ -101,6 +101,6 @@ describe("Post Tests", () => {
         const response = await request(app).delete(`/posts/${postId}`).set(
             { authorization: "JWT " + testUser.accessToken });
         expect(response.statusCode).toBe(200);
-        expect(response.body.message).toBe("Item deleted successfully");
+        expect(response.body.message).toBe("Post deleted successfully");
     });
 });

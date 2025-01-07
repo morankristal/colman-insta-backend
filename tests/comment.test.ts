@@ -113,6 +113,6 @@ describe("Comments Tests", () => {
         const response = await request(app).delete(`/comments/${commentId}`).set(
             { authorization: "JWT " + testUser.accessToken });
         expect(response.statusCode).toBe(200);
-        expect(response.body.message).toBe("Item deleted successfully");
+        expect(response.body.message).toBe("Comment deleted successfully");
     });
 });

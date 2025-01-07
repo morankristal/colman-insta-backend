@@ -31,8 +31,8 @@ describe("User Tests", () => {
 
     test("Test Create User", async () => {
         const newUser = { username: "unique_user", email: "unique_user@example.com", password: "secure_password" };
-        const response = await request(app).post("/users").send(newUser);
-        expect(response.statusCode).toBe(201);
+        const response = await request(app).post("/auth/register").send(newUser);
+        expect(response.statusCode).toBe(200);
         expect(response.body.username).toBe(newUser.username);
         expect(response.body.email).toBe(newUser.email);
         userId = response.body._id;
