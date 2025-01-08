@@ -2,12 +2,12 @@ import request from "supertest";
 import initApp from "../server";
 import mongoose from "mongoose";
 import { Express } from "express";
-import Post from "../models/post.model";
-import User, { IUser } from "../models/user.model";
+import Post from "../src/models/post.model";
+import User, { IUser } from "../src/models/user.model";
 import testComments from "./test_comments.json";
 import testUsers from "./test_users.json";
 import testPosts from "./test_posts.json";
-import Comment from "../models/comment.model";
+import Comment from "../src/models/comment.model";
 
 var app: Express;
 let postId: string = "777f777f7f7777f77f1f1f1f";

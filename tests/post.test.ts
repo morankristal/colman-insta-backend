@@ -2,10 +2,10 @@ import request from "supertest";
 import initApp from "../server";
 import mongoose from "mongoose";
 import { Express } from "express";
-import Post from "../models/post.model";
+import Post from "../src/models/post.model";
 import testPosts from "./test_posts.json";
 import testUsers from "./test_users.json";
-import User ,{ IUser } from "../models/user.model";
+import User ,{ IUser } from "../src/models/user.model";
 
 var app: Express;
 let postId: string = "";
