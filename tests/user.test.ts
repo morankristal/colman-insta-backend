@@ -2,7 +2,7 @@ import request from "supertest";
 import initApp from "../server";
 import mongoose from "mongoose";
 import { Express } from "express";
-import User from "../models/user.model";
+import User from "../src/models/user.model";
 import testUsers from "./test_users.json";
 
 var app: Express;
