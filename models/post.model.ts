@@ -34,6 +34,7 @@ const postSchema = new Schema<IPost>({
         type: Date,
         default: Date.now,
     },
+
 });
 
 
