@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --detectOpenHandles --passWithNoTests --runInBand",
+    "test": "jest --detectOpenHandles --passWithNoTests --runInBand --coverage",
     "testAuth": "jest --detectOpenHandles --forceExit auth.test.ts",
     "testPost": "jest --detectOpenHandles --forceExit post.test.ts",
     "testComment": "jest --detectOpenHandles --forceExit comment.test.ts",

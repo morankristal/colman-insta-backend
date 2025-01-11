@@ -94,24 +94,15 @@ describe("Auth Tests", () => {
       password: "testpassword",
     });
     expect(response2.statusCode).not.toBe(200);
-  });
 
-                    // test("Auth test posts authorization", async () => {
-                    //     const response = await request(app).post("/posts").send({
-                    //     title: "Test Post",
-                    //     content: "Test Content",
-                    //     sender: "baduser",
-                    //     });
-                    //     expect(response.statusCode).not.toBe(201);
-                    //     const response2 = await request(app).post("/posts").set(
-                    //     { authorization: "JWT " + testUser.accessToken }
-                    //     ).send({
-                    //     title: "Test Post",
-                    //     content: "Test Content",
-                    //     sender: "testuser",
-                    //     });
-                    //     expect(response2.statusCode).toBe(201);
-                    // });
+
+      process.env.TOKEN_SECRET = ''; // לא להגדיר את הסוד כדי לגרום לכישלון
+      const response6 = await request(app).post(baseUrl + "/login").send(testUser);
+      expect(response6.statusCode).not.toBe(200); // ציפייה לכישלון
+
+    process.env.TOKEN_SECRET= "c51c41a352c64f067a3e40cc5bbabf2a42ef696d740239401c30d3ae2df9fbf4fe4645e790df1b57cbd83cea13fe624baf95f038ef5ad30030e0eaa86b7dc7fe"
+
+  });
 
   test("Test refresh token", async () => {
     const response = await request(app).post(baseUrl + "/refresh").send({
@@ -122,6 +113,11 @@ describe("Auth Tests", () => {
     expect(response.body.refreshToken).toBeDefined();
     testUser.accessToken = response.body.accessToken;
     testUser.refreshToken = response.body.refreshToken;
+
+    const response2 = await request(app).post(baseUrl + "/refresh").send({
+      refreshToken: '',
+    });
+    expect(response2.statusCode).not.toBe(200); // ציפייה לכישלון
   });
 
   test("Double use refresh token", async () => {
@@ -141,6 +137,15 @@ describe("Auth Tests", () => {
     });
     expect(response3.statusCode).not.toBe(200);
   });
+
+  test("Auth test invalid refresh token", async () => {
+    const invalidToken = "invalidToken";
+    const response = await request(app).post(baseUrl + "/refresh").send({
+      refreshToken: invalidToken,
+    });
+    expect(response.statusCode).not.toBe(200);
+  });
+
 
   test("Test logout", async () => {
     const response = await request(app).post(baseUrl + "/login").send(testUser);
@@ -201,6 +206,13 @@ describe("Auth Tests", () => {
     });
 
     expect(response4.statusCode).toBe(201);
-
   });
+
+  test("Auth test logout failure", async () => {
+    const response = await request(app).post(baseUrl + "/logout").send({
+      refreshToken: "invalidRefreshToken",
+    });
+    expect(response.statusCode).not.toBe(200);
+  });
+
 });

@@ -23,7 +23,7 @@ class PostController extends BaseController<IPost> {
             }
 
             if(userId && userId !== item.sender.toString()){
-                return res.status(403).send("You are not authorized to update this comment");
+                return res.status(403).send("You are not authorized to update this post");
             }
 
             const updatedItem = await this.model.findByIdAndUpdate(id, updateData, { new: true });

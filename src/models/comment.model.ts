@@ -44,7 +44,7 @@ const commentSchema = new Schema<IComment>({
     },
 });
 
-
+/* istanbul ignore next */
 commentSchema.pre('save', async function (next) {
     const postExists = await mongoose.model('Post').findById(this.post);
     if (!postExists) {

@@ -25,7 +25,7 @@ const testUser: Partial<User> = {
 beforeAll(async () => {
     console.log("beforeAll");
     app = await initApp();
-    
+
     await Post.deleteMany();
     await User.deleteMany();
     await User.insertMany(testUsers); //Run only if it does not exist in the DB
@@ -33,7 +33,6 @@ beforeAll(async () => {
 
     const res = await request(app).post('/auth/register').send(testUser)
     testUser.id = res.body._id
-
 });
 
 async function loginUser() {
@@ -43,7 +42,7 @@ async function loginUser() {
     })
     testUser.accessToken = response.body.accessToken
 };
-   
+
 beforeEach(async ()=>{
     await loginUser()
 });
@@ -60,6 +59,14 @@ describe("Post Tests", () => {
         expect(response.statusCode).toBe(200);
         expect(response.body.length).toBe(testPosts.length);
     });
+
+    test("Fail get all", async () => {
+        await mongoose.disconnect();
+        const response = await request(app).get("/posts");
+        expect(response.statusCode).toBe(400);
+        app = await initApp();
+    });
+
 
     test("Create a post", async () => {
         const newPost = {
@@ -80,10 +87,35 @@ describe("Post Tests", () => {
         postId = response.body._id;
     });
 
+    test("Fail Create a post", async () => {
+        const newComment = {
+            title: "New Post Title",
+            content: "This is a new post.",
+            sender: testUser.id,
+        };
+
+        await mongoose.disconnect();
+        const response = await request(app).post("/posts").set(
+            { authorization: "JWT " + testUser.accessToken })
+            .send(newComment);
+        expect(response.statusCode).not.toBe(201);
+        app = await initApp();
+    });
+
     test("Get post by ID", async () => {
         const response = await request(app).get(`/posts/${postId}`);
         expect(response.statusCode).toBe(200);
         expect(response.body._id).toBe(postId);
+    });
+
+    test("Fail Get post by ID", async () => {
+        const response = await request(app).get(`/posts/888f888f8f8888f88f8f8f8f`);
+        expect(response.statusCode).toBe(404);
+
+        await mongoose.disconnect();
+        const response2 = await request(app).get(`/posts/${postId}`);
+        expect(response2.statusCode).toBe(400);
+        app = await initApp();
     });
 
     test("Get posts by sender", async () => {
@@ -103,6 +135,38 @@ describe("Post Tests", () => {
         expect(response.statusCode).toBe(200);
         expect(response.body.title).toBe(updatedPost.title);
         expect(response.body.content).toBe(updatedPost.content);
+    });
+
+    test("Update a post does not exists", async () => {
+        const updatedPost = { title: "Updated Post Title", content: "Updated post content" };
+        const response = await request(app)
+            .put(`/posts/888f888f8f8888f88f8f8f8f`).set(
+                { authorization: "JWT " + testUser.accessToken })
+            .send(updatedPost);
+        expect(response.statusCode).toBe(404);
+    });
+
+    test("Update a post - unauthorized user", async () => {
+        const updatedPost = { title: "Updated Post Title", content: "Updated post content" };
+        const response = await request(app)
+            .put(`/posts/777f777f7f7777f77f1f1f1f`).set(
+                { authorization: "JWT " + testUser.accessToken })
+            .send(updatedPost);
+        expect(response.statusCode).toBe(403);
+        expect(response.text).toBe("You are not authorized to update this post");
+    });
+
+    test("Delete a post does not exists", async () => {
+        const response = await request(app).delete(`/posts/123f123f1f1234f12f1f1f1f`).set(
+            { authorization: "JWT " + testUser.accessToken });
+        expect(response.statusCode).toBe(404);
+    });
+
+    test("Delete a post - unauthorized user", async () => {
+        const response = await request(app).delete(`/posts/777f777f7f7777f77f1f1f1f`).set(
+            { authorization: "JWT " + testUser.accessToken });
+        expect(response.statusCode).toBe(403);
+        expect(response.text).toBe("You are not authorized to delete this post");
     });
 
     test("Delete a post", async () => {

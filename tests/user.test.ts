@@ -29,6 +29,14 @@ describe("User Tests", () => {
         expect(response.body.length).toBe(testUsers.length);
     });
 
+    test("Fail get all", async () => {
+        await mongoose.disconnect();
+        const response = await request(app).get("/users");
+        expect(response.statusCode).toBe(400);
+        app = await initApp();
+    });
+
+
     test("Test Create User", async () => {
         const newUser = { username: "unique_user", email: "unique_user@example.com", password: "secure_password", profilePicture: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.com%2Ficon%2Favatar_266033&psig=AOvVaw2QulK1YcmpEdM3cN7scACn&ust=1736347053441000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCIiUhP7q44oDFQAAAAAdAAAAABAE",
         };
@@ -46,6 +54,16 @@ describe("User Tests", () => {
         expect(response.body.username).toBe("unique_user");
     });
 
+    test("Fail Get user by ID", async () => {
+        const response = await request(app).get(`/users/999f999f9f9999f99f9f9f9f`);
+        expect(response.statusCode).toBe(404);
+
+        await mongoose.disconnect();
+        const response2 = await request(app).get(`/users/${userId}`);
+        expect(response2.statusCode).toBe(400);
+        app = await initApp();
+    });
+
     test("Test Update User", async () => {
         const updatedUser = { username: "updated_user", email: "updated_user@example.com" };
         const response = await request(app).put(`/users/${userId}`).send(updatedUser);
@@ -59,13 +77,4 @@ describe("User Tests", () => {
         expect(response.statusCode).toBe(200);
         expect(response.body.message).toBe("Item deleted successfully");
     });
-
-    // test("Test password comparison", async () => {
-    //     const user = await User.findOne({ username: testUsers[0].username });
-    //     expect(user).not.toBeNull();
-    //     if (user) {
-    //         const isMatch = await user.comparePassword(testUsers[0].password);
-    //         expect(isMatch).toBe(true);
-    //     }
-    // });
 });

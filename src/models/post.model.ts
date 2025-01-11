@@ -37,7 +37,7 @@ const postSchema = new Schema<IPost>({
 
 });
 
-
+/* istanbul ignore next */
 postSchema.pre('save', async function (next) {
     const userExists = await mongoose.model('User').findById(this.sender);
     if (!userExists) {

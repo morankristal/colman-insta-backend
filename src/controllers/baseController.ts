@@ -58,8 +58,6 @@ class BaseController<T> {
             if (!item) {
                 return res.status(404).send("Not found");
             }
-
-            // if(req.params.userId && req.params.userId !== item.sender)
             const updatedItem = await this.model.findByIdAndUpdate(id, updateData, { new: true });
             res.status(200).send(updatedItem);
         } catch (error) {
