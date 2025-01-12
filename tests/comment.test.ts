@@ -153,6 +153,29 @@ describe("Comments Tests", () => {
         expect(response.statusCode).toBe(404);
     });
 
+    test("Get all comments for a specific post", async () => {
+        const response = await request(app).get(`/comments/getByPost/777f777f7f7777f77f1f1f1f`).set(
+            { authorization: "JWT " + testUser.accessToken });
+        expect(response.statusCode).toBe(200);
+    });
+
+    test("Get comments for a post with no comments", async () => {
+        const emptyPostId = "444f444f4f4444f44f1f1f1f"; // A post ID not in test data
+        const response = await request(app).get(`/comments/getByPost/${emptyPostId}`).set(
+            { authorization: "JWT " + testUser.accessToken });
+        expect(response.statusCode).toBe(404);
+        expect(response.body.message).toBe("No comments found for this post");
+    });
+
+    test("Fail to get comments for a non-existing post", async () => {
+        const invalidPostId = "444f444f4f4444f44f1f1f1";
+        const response = await request(app).get(`/comments/getByPost/${invalidPostId}`).set(
+            { authorization: "JWT " + testUser.accessToken });
+        expect(response.statusCode).toBe(400);
+    });
+
+
+
     test("Delete a comment does not exists", async () => {
         const response = await request(app).delete(`/comments/123f123f1f1234f12f1f1f1f`).set(
             { authorization: "JWT " + testUser.accessToken });

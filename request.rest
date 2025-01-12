@@ -53,10 +53,10 @@ Content-Type: application/json
 # Create a new post
 POST http://localhost:3000/posts
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzgzZDgzZTFmZjRkZjc4YjE2YzhlNmEiLCJyYW5kb20iOiIwLjE0OTM4NzM1ODk5MDQ3MDYyIiwiaWF0IjoxNzM2NjkzODMyLCJleHAiOjE3MzcyOTg2MzJ9.bs-3lsF_mYuPqBc7fh5396HHYxtXEdIXj3JntoGU8Ks
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzgzZjUzNmQyNWEwODMyZDc0ZWVkODQiLCJyYW5kb20iOiIwLjM4MjU5NzA0OTM1OTQ1MDQiLCJpYXQiOjE3MzY3MDEyNDEsImV4cCI6MTczNzMwNjA0MX0.2zDDJq6RNwyVX6ojH1Row0NwVacN9IRq_XX4sa7BQt0
 
 {
-  "title": "2",
+  "title": "3",
   "content": "This is the content of the first post"
 }
 
@@ -110,39 +110,46 @@ Content-Type: application/json
 ###
 
 # Get comment by ID
-GET http://localhost:3000/comments/677acc1207c74b1f9918cd33
+GET http://localhost:3000/comments/6783f2353d2a5f13c3b71e6b
 Content-Type: application/json
+
+###
+
+#get all comments by post id
+GET http://localhost:3000/comments/getByPost/6783f24b1b6b758f37422675
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzgzZjUzNmQyNWEwODMyZDc0ZWVkODQiLCJyYW5kb20iOiIwLjM4MjU5NzA0OTM1OTQ1MDQiLCJpYXQiOjE3MzY3MDEyNDEsImV4cCI6MTczNzMwNjA0MX0.2zDDJq6RNwyVX6ojH1Row0NwVacN9IRq_XX4sa7BQt0
+
 
 ###
 
 # Create a new comment
 POST http://localhost:3000/comments
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdkMTE1ZDRhMzFhMzlkMTc5NTE5MTUiLCJyYW5kb20iOiIwLjIyODMwMTAxNzg1OTIyMDIiLCJpYXQiOjE3MzYyNTAwMTMsImV4cCI6MTczNjUwOTIxM30.yJ14md7SQ79kPfEzN7P6OEtJPEWJjFmJSul1SEZgPyI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzgzZjUzNmQyNWEwODMyZDc0ZWVkODQiLCJyYW5kb20iOiIwLjM4MjU5NzA0OTM1OTQ1MDQiLCJpYXQiOjE3MzY3MDEyNDEsImV4cCI6MTczNzMwNjA0MX0.2zDDJq6RNwyVX6ojH1Row0NwVacN9IRq_XX4sa7BQt0
 
 {
-  "post": "999f999f9f9999f99f9f9f9f",
-  "content": "בדיקה",
-  "sender": "677d115d4a31a39d17951915"
-}
-
-###
-
-# Update a comment by ID
-PUT http://localhost:3000/comments/677acc1207c74b1f9918cd31
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdkMTE1ZDRhMzFhMzlkMTc5NTE5MTUiLCJyYW5kb20iOiIwLjIyODMwMTAxNzg1OTIyMDIiLCJpYXQiOjE3MzYyNTAwMTMsImV4cCI6MTczNjUwOTIxM30.yJ14md7SQ79kPfEzN7P6OEtJPEWJjFmJSul1SEZgPyI
-
-{
+  "post": "6783f24b1b6b758f37422675",
   "content": "בדיקה 2"
 }
 
 ###
 
-# Delete a comment by ID
-DELETE http://localhost:3000/comments/677d24dfbc3303c023034ce4
+# Update a comment by ID
+PUT http://localhost:3000/comments/6783f59dd25a0832d74eeda0
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdkMTE1ZDRhMzFhMzlkMTc5NTE5MTUiLCJyYW5kb20iOiIwLjIyODMwMTAxNzg1OTIyMDIiLCJpYXQiOjE3MzYyNTAwMTMsImV4cCI6MTczNjUwOTIxM30.yJ14md7SQ79kPfEzN7P6OEtJPEWJjFmJSul1SEZgPyI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzgzZjUzNmQyNWEwODMyZDc0ZWVkODQiLCJyYW5kb20iOiIwLjM4MjU5NzA0OTM1OTQ1MDQiLCJpYXQiOjE3MzY3MDEyNDEsImV4cCI6MTczNzMwNjA0MX0.2zDDJq6RNwyVX6ojH1Row0NwVacN9IRq_XX4sa7BQt0
+
+{
+  "content": "בדיקה 333"
+}
+
+###
+
+# Delete a comment by ID
+DELETE http://localhost:3000/comments/6783f59dd25a0832d74eeda0
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzgzZjUzNmQyNWEwODMyZDc0ZWVkODQiLCJyYW5kb20iOiIwLjM4MjU5NzA0OTM1OTQ1MDQiLCJpYXQiOjE3MzY3MDEyNDEsImV4cCI6MTczNzMwNjA0MX0.2zDDJq6RNwyVX6ojH1Row0NwVacN9IRq_XX4sa7BQt0
 
 
 

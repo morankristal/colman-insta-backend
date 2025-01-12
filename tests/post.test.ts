@@ -28,8 +28,8 @@ beforeAll(async () => {
 
     await Post.deleteMany();
     await User.deleteMany();
-    await User.insertMany(testUsers); //Run only if it does not exist in the DB
-    await Post.insertMany(testPosts); //Run only if it does not exist in the DB
+    await User.insertMany(testUsers);
+    await Post.insertMany(testPosts);
 
     const res = await request(app).post('/auth/register').send(testUser)
     testUser.id = res.body._id

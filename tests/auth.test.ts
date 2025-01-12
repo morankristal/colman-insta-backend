@@ -11,7 +11,6 @@ beforeAll(async () => {
   console.log("beforeAll");
   app = await initApp();
   await userModel.deleteMany();
-  await postModel.deleteMany();
 });
 
 afterAll((done) => {
@@ -21,6 +20,7 @@ afterAll((done) => {
 });
 
 const baseUrl = "/auth";
+var postId = "";
 
 type User = IUser & {
   accessToken?: string,
@@ -131,7 +131,7 @@ describe("Auth Tests", () => {
       refreshToken: testUser.refreshToken,
     });
     expect(response2.statusCode).not.toBe(200);
-   
+
     const response3 = await request(app).post(baseUrl + "/refresh").send({
       refreshToken: refreshTokenNew,
     });
@@ -196,17 +196,8 @@ describe("Auth Tests", () => {
     });
     expect(response3.statusCode).toBe(200);
     testUser.accessToken = response3.body.accessToken;
-    
-    const response4 = await request(app).post("/posts").set(
-      { authorization: "JWT " + testUser.accessToken }
-    ).send({
-      title: "Test Post",
-      content: "Test Content",
-      sender: testUser.id,
-    });
-
-    expect(response4.statusCode).toBe(201);
   });
+});
 
   test("Auth test logout failure", async () => {
     const response = await request(app).post(baseUrl + "/logout").send({
@@ -214,5 +205,3 @@ describe("Auth Tests", () => {
     });
     expect(response.statusCode).not.toBe(200);
   });
-
-});

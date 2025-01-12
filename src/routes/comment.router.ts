@@ -5,6 +5,55 @@ import { authMiddleware } from "../common/authentication_middleware";
 const router = Router();
 const commentController = new CommentController();
 
+/**
+ * @swagger
+ * /comments/post/{postId}:
+ *   get:
+ *     summary: Get all comments for a specific post
+ *     tags: [Comments]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: postId
+ *         required: true
+ *         description: ID of the post
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: List of comments for the specified post
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                     description: ID of the comment
+ *                   content:
+ *                     type: string
+ *                     description: Content of the comment
+ *                   sender:
+ *                     type: object
+ *                     properties:
+ *                       _id:
+ *                         type: string
+ *                       name:
+ *                         type: string
+ *                   post:
+ *                     type: string
+ *                     description: ID of the post
+ *       404:
+ *         description: No comments found for this post
+ *       400:
+ *         description: Invalid post ID
+ */
+router.get("/getByPost/:postId", authMiddleware,async (req: Request, res: Response): Promise<void> =>{
+    await commentController.getCommentsByPostId(req, res);
+});
 
 /**
  * @swagger
