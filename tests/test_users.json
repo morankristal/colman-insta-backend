@@ -1,0 +1,16 @@
+[
+  {
+    "username": "john_doe",
+    "email": "john.doe@example.com",
+    "password": "password123",
+    "_id": "123f123f1f1234f12f1f1f1f",
+    "profilePicture": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.com%2Ficon%2Favatar_266033&psig=AOvVaw2QulK1YcmpEdM3cN7scACn&ust=1736347053441000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCIiUhP7q44oDFQAAAAAdAAAAABAE"
+  },
+  {
+    "username": "jane_doe",
+    "email": "jane.doe@example.com",
+    "password": "password456",
+    "_id": "888f888f8f8888f88f8f8f8f",
+    "profilePicture": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.com%2Ficon%2Favatar_266033&psig=AOvVaw2QulK1YcmpEdM3cN7scACn&ust=1736347053441000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCIiUhP7q44oDFQAAAAAdAAAAABAE"
+  }
+]

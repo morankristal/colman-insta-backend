@@ -1,34 +1,14 @@
-//morankristal-212174882-RonenAnuka-315236448
+import initApp from "./server";
 
-import 'dotenv/config';
-import express, { Application } from 'express';
-import mongoose from 'mongoose';
-import bodyParser from 'body-parser';
+const PORT: string | number = process.env.PORT || 3000;
 
-import postRouter from './routes/post.router';
-import commentRouter from './routes/comment.router';
-
-const app: Application = express();
-
-// Middleware
-app.use(bodyParser.json());
-
-// Routes
-app.use('/posts', postRouter);
-app.use('/comments', commentRouter);
-
-// MongoDB Connection
-mongoose
-    .connect(process.env.MONGO_URI as string, {})
-    .then(() => {
-        console.log('Connected to MongoDB');
+initApp()
+    .then((app) => {
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+            console.log(`Swagger docs available at http://localhost: ${PORT}/api-docs`);
+        });
     })
-    .catch((err) => {
-        console.error('MongoDB connection error:', err);
+    .catch((error) => {
+        console.error("Failed to start the server:", error);
     });
-
-// Start the Server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});

@@ -1,77 +1,183 @@
-### Add a Post
-POST http://localhost:3000/posts
+
+# Get all users
+GET http://localhost:3000/users
+Content-Type: application/json
+
+###
+
+# Get user by ID
+GET http://localhost:3000/users/123f123f1f1234f12f1f1f1f
+Content-Type: application/json
+
+###
+
+# Update a user by ID
+PUT http://localhost:3000/users/677d10254a31a39d179518fa
 Content-Type: application/json
 
 {
-  "title": "My First Post",
-  "content": "This is the content of my first post.",
-  "sender": "123"
+  "username": "123123.updated",
+  "email": "john.updated@example.com"
 }
 
-### Add a Post
-POST http://localhost:3000/posts
+###
+
+# Delete a user by ID
+DELETE http://localhost:3000/users/677d10254a31a39d179518fa
 Content-Type: application/json
 
-{
-"title": "My second post",
-"content": "I love to program.",
-"sender": "555"
-}
+###
 
-### Add a Post
-POST http://localhost:3000/posts
-Content-Type: application/json
+# ====================
+# Post Endpoints
+# ====================
 
-{
-  "title": "hello",
-  "content": "I love pizza",
-  "sender": "1234"
-}
-
-### Get All Posts
+# Get all posts
 GET http://localhost:3000/posts
-
-### Get a Post by ID
-GET http://localhost:3000/posts/67446f5fc021e06658eba6eb
-
-### Update a Post
-PUT http://localhost:3000/posts/67446f5fc021e06658eba6eb
 Content-Type: application/json
 
+###
+
+# Get post by ID
+GET http://localhost:3000/posts/67727fad79035b604eb54179
+Content-Type: application/json
+
+###
+
+# Get Post By User ID
+GET http://localhost:3000/posts/getBySender/677d40e4c12024407a33eb5a
+Content-Type: application/json
+
+###
+
+# Create a new post
+POST http://localhost:3000/posts
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdkNDBlNGMxMjAyNDQwN2EzM2ViNWEiLCJyYW5kb20iOiIwLjUzMzI1NDE0NTU1NzM0NTgiLCJpYXQiOjE3MzYyNjE4ODgsImV4cCI6MTczNjg2NjY4OH0.auGmuOVEnBHHkJsrOxaP3V9seBJejnxn8eoa5ipLVKM
+
 {
-"title": "Updated Title",
-"content": "Updated Content"
+  "title": "בדיקה 1",
+  "content": "This is the content of the first post"
 }
 
-### Get all posts by sender ID
-GET http://localhost:3000/posts?sender=1234
 
-### Add a comment
+###
+
+# Update a post by ID
+
+PUT http://localhost:3000/posts/677d276f7ecd90ee74a2aff0
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdkMTE1ZDRhMzFhMzlkMTc5NTE5MTUiLCJyYW5kb20iOiIwLjIyODMwMTAxNzg1OTIyMDIiLCJpYXQiOjE3MzYyNTAwMTMsImV4cCI6MTczNjUwOTIxM30.yJ14md7SQ79kPfEzN7P6OEtJPEWJjFmJSul1SEZgPyI
+
+
+{
+  "title": "Updated Post",
+  "content": "This is the updated content"
+}
+
+###
+
+# Delete a post by ID
+
+DELETE http://localhost:3000/posts/677d13f24a31a39d1795192c
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdkMTE1ZDRhMzFhMzlkMTc5NTE5MTUiLCJyYW5kb20iOiIwLjIyODMwMTAxNzg1OTIyMDIiLCJpYXQiOjE3MzYyNTAwMTMsImV4cCI6MTczNjUwOTIxM30.yJ14md7SQ79kPfEzN7P6OEtJPEWJjFmJSul1SEZgPyI
+
+
+###
+
+# ====================
+# Comment Endpoints
+# ====================
+
+# Get all comments
+GET http://localhost:3000/comments
+Content-Type: application/json
+
+###
+
+# Get comment by ID
+GET http://localhost:3000/comments/677acc1207c74b1f9918cd33
+Content-Type: application/json
+
+###
+
+# Create a new comment
 POST http://localhost:3000/comments
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdkMTE1ZDRhMzFhMzlkMTc5NTE5MTUiLCJyYW5kb20iOiIwLjIyODMwMTAxNzg1OTIyMDIiLCJpYXQiOjE3MzYyNTAwMTMsImV4cCI6MTczNjUwOTIxM30.yJ14md7SQ79kPfEzN7P6OEtJPEWJjFmJSul1SEZgPyI
 
 {
-  "post": "67446f5fc021e06658eba6eb",
-  "content": "comment2 test",
-  "sender": "Ronen"
+  "post": "999f999f9f9999f99f9f9f9f",
+  "content": "בדיקה",
+  "sender": "677d115d4a31a39d17951915"
 }
 
-### Get comment by ID
-GET http://localhost:3000/comments/674610ab9e759d2abe0461f2
-Content-Type: application/json
+###
 
-### Update Comment
-PUT http://localhost:3000/comments/674610ab9e759d2abe0461f2
+# Update a comment by ID
+PUT http://localhost:3000/comments/677acc1207c74b1f9918cd31
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdkMTE1ZDRhMzFhMzlkMTc5NTE5MTUiLCJyYW5kb20iOiIwLjIyODMwMTAxNzg1OTIyMDIiLCJpYXQiOjE3MzYyNTAwMTMsImV4cCI6MTczNjUwOTIxM30.yJ14md7SQ79kPfEzN7P6OEtJPEWJjFmJSul1SEZgPyI
+
+{
+  "content": "בדיקה 2"
+}
+
+###
+
+# Delete a comment by ID
+DELETE http://localhost:3000/comments/677d24dfbc3303c023034ce4
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdkMTE1ZDRhMzFhMzlkMTc5NTE5MTUiLCJyYW5kb20iOiIwLjIyODMwMTAxNzg1OTIyMDIiLCJpYXQiOjE3MzYyNTAwMTMsImV4cCI6MTczNjUwOTIxM30.yJ14md7SQ79kPfEzN7P6OEtJPEWJjFmJSul1SEZgPyI
+
+
+
+###
+
+# Register a user
+
+POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-  "post": "67446f5fc021e06658eba6eb",
-  "content": "This is an updated comment!!",
-  "sender": "Ronen"
+  "username": "moran123",
+  "email": "moran123@example.com",
+  "password": "password11",
+  "profilePicture": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.com%2Ficon%2Favatar_266033&psig=AOvVaw2QulK1YcmpEdM3cN7scACn&ust=1736347053441000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCIiUhP7q44oDFQAAAAAdAAAAABAE"
 }
 
-### Delete Comment
-DELETE http://localhost:3000/comments/67484ed05831efdf5ecde423
+###
 
-### Get all comments for a post
-GET http://localhost:3000/comments/post/67446f5fc021e06658eba6eb
+# login a user
+
+
+POST http://localhost:3000/auth/login/
+Content-Type: application/json
+
+
+{
+  "username": "moran123",
+  "password": "password11"
+}
+
+###
+
+# logout
+
+POST http://localhost:3000/auth/logout/
+Content-Type: application/json
+
+{
+    "refreshToken" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdjMTZhNDAxMTU3MWFiOTY5NjAwYjYiLCJyYW5kb20iOiIwLjIwNTIxMjI3MDQzOTU0NjI2IiwiaWF0IjoxNzM2MjQ5NjMyLCJleHAiOjE3MzY4NTQ0MzJ9.4eOwFVJi6wNSsasaYfSWjMa-y7HbTrxxoX_AvTkrOQ4"
+}
+
+###
+# refresh
+
+POST http://localhost:3000/auth/refresh/
+Content-Type: application/json
+
+{
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdkMTE1ZDRhMzFhMzlkMTc5NTE5MTUiLCJyYW5kb20iOiIwLjMxNzA3MDM5NTYzMzgzNzQzIiwiaWF0IjoxNzM2MjUxMTMxLCJleHAiOjE3MzY4NTU5MzF9.PLH4weFWgomHAw238ahWr-4QCyqpcVAO7aFgnb7jSO0"
+}
