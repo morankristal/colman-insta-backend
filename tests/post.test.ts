@@ -76,8 +76,6 @@ describe("Post Tests", () => {
         };
         const failresponse = await request(app).post("/posts").send(newPost)
         expect(failresponse.statusCode).not.toBe(201)
-
-        console.log(testUser.id)
         const response = await request(app).post("/posts").set(
             { authorization: "JWT " + testUser.accessToken })
             .send(newPost)
@@ -155,6 +153,85 @@ describe("Post Tests", () => {
         expect(response.statusCode).toBe(403);
         expect(response.text).toBe("You are not authorized to update this post");
     });
+
+    describe("Like Tests", () => {
+        test("Like a post", async () => {
+            const response = await request(app)
+                .post(`/posts/${postId}/like`)
+                .set({ authorization: "JWT " + testUser.accessToken });
+            expect(response.statusCode).toBe(200);
+            expect(response.body.message).toBe("Post liked successfully");
+            const postResponse = await request(app).get(`/posts/${postId}`);
+            expect(postResponse.statusCode).toBe(200);
+            expect(postResponse.body.likes).toContain(testUser.id);
+        });
+
+        test("Unlike a post", async () => {
+            const response = await request(app)
+                .post(`/posts/${postId}/like`)
+                .set({ authorization: "JWT " + testUser.accessToken });
+
+            expect(response.statusCode).toBe(200);
+            expect(response.body.message).toBe("Post unliked successfully");
+
+            const response2 = await request(app)
+                .post(`/posts/${postId}/like`)
+                .set({ authorization: "JWT " + testUser.accessToken });
+            expect(response2.statusCode).toBe(200);
+            expect(response2.body.message).toBe("Post liked successfully");
+        });
+
+        test("fail like a post", async () => {
+            await mongoose.disconnect();
+            const response = await request(app)
+                .post(`/posts/${postId}/like`)
+                .set({ authorization: "JWT " + testUser.accessToken });
+            expect(response.statusCode).toBe(400);
+            app = await initApp();
+        });
+
+        test("Get liked posts", async () => {
+            const response = await request(app)
+                .get(`/posts/liked`)
+                .set({ authorization: "JWT " + testUser.accessToken });
+            expect(response.statusCode).toBe(200);
+            expect(response.body.length).toBe(1); // Assuming 1 post is liked
+            expect(response.body[0]._id).toBe(postId);
+        });
+
+        test("Like a post - post not found", async () => {
+            const response = await request(app)
+                .post(`/posts/888f888f8f8888f88f8f8f8f/like`)
+                .set({ authorization: "JWT " + testUser.accessToken });
+            expect(response.statusCode).toBe(404);
+            expect(response.body.message).toBe("Post not found");
+        });
+
+        test("Get liked posts - no posts liked", async () => {
+            const response2 = await request(app)
+                .post(`/posts/${postId}/like`)
+                .set({ authorization: "JWT " + testUser.accessToken });
+            expect(response2.statusCode).toBe(200);
+            expect(response2.body.message).toBe( "Post unliked successfully");
+
+            const response = await request(app)
+                .get("/posts/liked")
+                .set({ authorization: "JWT " + testUser.accessToken });
+
+            expect(response.statusCode).toBe(404);
+            expect(response.body.message).toBe( "No liked posts found");
+        });
+
+        test("fail get liked posts", async () => {
+            await mongoose.disconnect();
+            const response = await request(app)
+                .get("/posts/liked")
+                .set({ authorization: "JWT " + testUser.accessToken });
+            expect(response.statusCode).toBe(400);
+            app = await initApp();
+        });
+    });
+
 
     test("Delete a post does not exists", async () => {
         const response = await request(app).delete(`/posts/123f123f1f1234f12f1f1f1f`).set(

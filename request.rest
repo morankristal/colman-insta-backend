@@ -39,13 +39,13 @@ Content-Type: application/json
 ###
 
 # Get post by ID
-GET http://localhost:3000/posts/67727fad79035b604eb54179
+GET http://localhost:3000/posts/6783d6db35fe94d6f18e1439
 Content-Type: application/json
 
 ###
 
 # Get Post By User ID
-GET http://localhost:3000/posts/getBySender/677d40e4c12024407a33eb5a
+GET http://localhost:3000/posts/getBySender/6783d83e1ff4df78b16c8e6a
 Content-Type: application/json
 
 ###
@@ -53,10 +53,10 @@ Content-Type: application/json
 # Create a new post
 POST http://localhost:3000/posts
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdkNDBlNGMxMjAyNDQwN2EzM2ViNWEiLCJyYW5kb20iOiIwLjUzMzI1NDE0NTU1NzM0NTgiLCJpYXQiOjE3MzYyNjE4ODgsImV4cCI6MTczNjg2NjY4OH0.auGmuOVEnBHHkJsrOxaP3V9seBJejnxn8eoa5ipLVKM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzgzZDgzZTFmZjRkZjc4YjE2YzhlNmEiLCJyYW5kb20iOiIwLjE0OTM4NzM1ODk5MDQ3MDYyIiwiaWF0IjoxNzM2NjkzODMyLCJleHAiOjE3MzcyOTg2MzJ9.bs-3lsF_mYuPqBc7fh5396HHYxtXEdIXj3JntoGU8Ks
 
 {
-  "title": "בדיקה 1",
+  "title": "2",
   "content": "This is the content of the first post"
 }
 
@@ -65,15 +65,28 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdkNDBlN
 
 # Update a post by ID
 
-PUT http://localhost:3000/posts/677d276f7ecd90ee74a2aff0
+PUT http://localhost:3000/posts/6783ec8c903e34c4bc369b98
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdkMTE1ZDRhMzFhMzlkMTc5NTE5MTUiLCJyYW5kb20iOiIwLjIyODMwMTAxNzg1OTIyMDIiLCJpYXQiOjE3MzYyNTAwMTMsImV4cCI6MTczNjUwOTIxM30.yJ14md7SQ79kPfEzN7P6OEtJPEWJjFmJSul1SEZgPyI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzgzZDgzZTFmZjRkZjc4YjE2YzhlNmEiLCJyYW5kb20iOiIwLjE0OTM4NzM1ODk5MDQ3MDYyIiwiaWF0IjoxNzM2NjkzODMyLCJleHAiOjE3MzcyOTg2MzJ9.bs-3lsF_mYuPqBc7fh5396HHYxtXEdIXj3JntoGU8Ks
 
 
 {
   "title": "Updated Post",
   "content": "This is the updated content"
 }
+###
+
+# add like to post
+POST http://localhost:3000/posts/6783ee183dc9dc94c3a341b3/like
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzgzZDgzZTFmZjRkZjc4YjE2YzhlNmEiLCJyYW5kb20iOiIwLjE0OTM4NzM1ODk5MDQ3MDYyIiwiaWF0IjoxNzM2NjkzODMyLCJleHAiOjE3MzcyOTg2MzJ9.bs-3lsF_mYuPqBc7fh5396HHYxtXEdIXj3JntoGU8Ks
+
+###
+
+# get all post that user liked
+GET http://localhost:3000/posts/liked
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzgzZDgzZTFmZjRkZjc4YjE2YzhlNmEiLCJyYW5kb20iOiIwLjQ1NTUwNjA4MTkyMDU3Mzg1IiwiaWF0IjoxNzM2Njk4Njg1LCJleHAiOjE3MzczMDM0ODV9.PkP_fwz5TQnBMPf0wS05Ncwg3haamTr9ea56326Qh7Q
 
 ###
 
@@ -169,7 +182,7 @@ POST http://localhost:3000/auth/logout/
 Content-Type: application/json
 
 {
-    "refreshToken" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzdjMTZhNDAxMTU3MWFiOTY5NjAwYjYiLCJyYW5kb20iOiIwLjIwNTIxMjI3MDQzOTU0NjI2IiwiaWF0IjoxNzM2MjQ5NjMyLCJleHAiOjE3MzY4NTQ0MzJ9.4eOwFVJi6wNSsasaYfSWjMa-y7HbTrxxoX_AvTkrOQ4"
+    "refreshToken" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzgzZDgzZTFmZjRkZjc4YjE2YzhlNmEiLCJyYW5kb20iOiIwLjg4NjY3NTczNzM2NTcwMDIiLCJpYXQiOjE3MzY2OTg2NzcsImV4cCI6MTczNzMwMzQ3N30.i6IBG_COKDN_LnOuBvrgi4V_7FaQvuHG1dDyfFZ1Kes"
 }
 
 ###

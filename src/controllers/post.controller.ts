@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Post from "../models/post.model";
 import { IPost } from "../models/post.model";
 import BaseController from "./baseController";
+import mongoose from "mongoose";
 
 // const postController = new BaseController<IPost>(Post);
 
@@ -14,8 +15,6 @@ class PostController extends BaseController<IPost> {
         const id = req.params.id;
         const updateData = req.body;
         const userId = req.params.userId;
-
-        console.log(req.params.userId)
         try {
             const item = await this.model.findById(id);
             if (!item) {
@@ -70,6 +69,47 @@ class PostController extends BaseController<IPost> {
             res.status(400).send(error);
         }
     }
+
+    async likePost(req: Request, res: Response){
+        const postId = req.params.id;
+        const userId = req.params.userId;
+
+        try {
+            const post = await Post.findById(postId);
+            if (!post) {
+                return res.status(404).send({ message: "Post not found" });
+            }
+
+            const userIdObjectId = new mongoose.Types.ObjectId(userId);
+
+            if (post.likes.some((id) => id.equals(userIdObjectId))) {
+                post.likes = post.likes.filter((id) => !id.equals(userIdObjectId));
+                await post.save();
+                return res.status(200).send({ message: "Post unliked successfully" });
+            } else {
+                post.likes.push(userIdObjectId);
+                await post.save();
+                return res.status(200).send({ message: "Post liked successfully" });
+            }
+        } catch (error) {
+            res.status(400).send(error);
+        }
+    }
+
+    async getLikedPosts(req: Request, res: Response) {
+        const userId = req.params.userId;
+        try {
+            const posts = await Post.find({ likes: userId });
+
+            if (!posts || posts.length === 0) {
+                return res.status(404).send({ message: "No liked posts found" });
+            }
+            res.status(200).send(posts);
+        } catch (error) {
+            res.status(400).send({ message: "Error retrieving liked posts" });
+        }
+    }
+
 }
 
 export default PostController;

@@ -35,33 +35,6 @@ router.get("/", async (req: Request, res: Response): Promise<void> => {
 
 /**
  * @swagger
- * /posts/{id}:
- *   get:
- *     summary: Get a post by ID
- *     tags: [Posts]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: ID of the post
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: The requested post
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Post'
- *       404:
- *         description: Post not found
- */
-router.get("/:id", async (req: Request, res: Response): Promise<void> => {
-    await postController.getById(req, res);
-});
-
-/**
- * @swagger
  * /posts/getBySender/{senderId}:
  *   get:
  *     summary: Get posts by sender ID
@@ -87,34 +60,6 @@ router.get("/:id", async (req: Request, res: Response): Promise<void> => {
  */
 router.get("/getBySender/:senderId", async (req: Request, res: Response): Promise<void> => {
     await postController.getPostsBySender(req, res);
-});
-
-/**
- * @swagger
- * /posts:
- *   post:
- *     summary: Create a new post
- *     tags: [Posts]
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/CreatePost'
- *     responses:
- *       201:
- *         description: Post created successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Post'
- *       400:
- *         description: Bad request
- */
-router.post("/", authMiddleware, async (req: Request, res: Response): Promise<void> => {
-    await postController.create(req, res);
 });
 
 /**
@@ -180,5 +125,115 @@ router.put("/:id", authMiddleware, async (req: Request, res: Response): Promise<
 router.delete("/:id", authMiddleware, async (req: Request, res: Response): Promise<void> => {
     await postController.delete(req, res);
 });
+
+/**
+ * @swagger
+ * /posts:
+ *   post:
+ *     summary: Create a new post
+ *     tags: [Posts]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreatePost'
+ *     responses:
+ *       201:
+ *         description: Post created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Post'
+ *       400:
+ *         description: Bad request
+ */
+router.post("/", authMiddleware, async (req: Request, res: Response): Promise<void> => {
+    await postController.create(req, res);
+});
+
+
+/**
+ * @swagger
+ * /posts/liked:
+ *   get:
+ *     summary: Get posts liked by the user
+ *     tags: [Posts]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of posts liked by the user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Post'
+ */
+router.get("/liked", authMiddleware, async (req: Request, res: Response): Promise<void> => {
+    await postController.getLikedPosts(req, res);
+});
+
+/**
+ * @swagger
+ * /posts/{id}/like:
+ *   post:
+ *     summary: Like or unlike a post
+ *     tags: [Posts]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the post
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Post liked/unliked successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Post'
+ *       404:
+ *         description: Post not found
+ */
+router.post("/:id/like", authMiddleware, async (req: Request, res: Response): Promise<void> => {
+    await postController.likePost(req, res);
+});
+
+/**
+ * @swagger
+ * /posts/{id}:
+ *   get:
+ *     summary: Get a post by ID
+ *     tags: [Posts]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the post
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: The requested post
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Post'
+ *       404:
+ *         description: Post not found
+ */
+router.get("/:id", async (req: Request, res: Response): Promise<void> => {
+    await postController.getById(req, res);
+});
+
+
+
 
 export default router;
