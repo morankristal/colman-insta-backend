@@ -11,6 +11,12 @@ Content-Type: application/json
 
 ###
 
+# get user by username
+GET http://localhost:3000/users/username/moran
+Content-Type: application/json
+
+###
+
 # Update a user by ID
 PUT http://localhost:3000/users/677d10254a31a39d179518fa
 Content-Type: application/json

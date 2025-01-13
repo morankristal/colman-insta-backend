@@ -1,7 +1,9 @@
 import { Router, Request, Response } from "express";
-import userController from "../controllers/user.controller";
+import UserController from "../controllers/user.controller";
 
 const router = Router();
+const userController = new UserController();
+
 
 /**
  * @swagger
@@ -55,6 +57,34 @@ router.get("/", async (req: Request, res: Response): Promise<void> => {
  */
 router.get("/:id", async (req: Request, res: Response): Promise<void> => {
     await userController.getById(req, res);
+});
+
+/**
+ * @swagger
+ * /users/username/{username}:
+ *   get:
+ *     summary: Get a user by username
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: username
+ *         required: true
+ *         description: Username of the user
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: The requested user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       404:
+ *         description: User not found
+ */
+
+router.get("/username/:username", async (req: Request, res: Response): Promise<void> => {
+    await userController.getByUsername(req, res);
 });
 
 /**
