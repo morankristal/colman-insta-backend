@@ -1,4 +1,6 @@
 import dotenv from "dotenv";
+import cors from 'cors';
+
 if (process.env.NODE_ENV == 'test'){
     dotenv.config({ path: './.testenv' })
    } else {
@@ -16,7 +18,7 @@ import swaggerJsDoc from "swagger-jsdoc";
 import swaggerOptions from "./swagger";
 
 const app: Express = express();
-
+app.use(cors());
 const swaggerSpec = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
