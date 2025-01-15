@@ -7,9 +7,7 @@ type Payload = {
 };
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    const authorization = req.header('authorization');
-    const token = authorization && authorization.split(' ')[1];
-
+    const token = req.cookies['accessToken'] as string|| req.header('Authorization')?.split(' ')[1]; // מקבלים את ה-token גם אם הוא בכותרת
     if (!token) {
         res.status(401).send('Access Denied');
         return;

@@ -175,7 +175,7 @@ Content-Type: application/json
 
 ###
 
-# login a user
+# login a userus
 
 
 POST http://localhost:3000/auth/login/

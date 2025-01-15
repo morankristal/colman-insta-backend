@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import cors from 'cors';
+import cookieParser from "cookie-parser";
 
 if (process.env.NODE_ENV == 'test'){
     dotenv.config({ path: './.testenv' })
@@ -18,15 +19,21 @@ import swaggerJsDoc from "swagger-jsdoc";
 import swaggerOptions from "./swagger";
 
 const app: Express = express();
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173', // כתובת האתר שלך
+    credentials: true, // מאפשר שליחה של קוקיז
+}));
+
 const swaggerSpec = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(bodyParser.json());
+app.use(cookieParser());
 app.use("/posts", postRouter);
 app.use("/comments", commentRouter);
 app.use("/users", userRouter);
 app.use("/auth", authRouter);
+
 
 const db = mongoose.connection;
 db.on("error", (error) => console.error(error));

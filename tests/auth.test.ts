@@ -105,31 +105,23 @@ describe("Auth Tests", () => {
   });
 
   test("Test refresh token", async () => {
-    const response = await request(app).post(baseUrl + "/refresh").send({
-      refreshToken: testUser.refreshToken,
-    });
+    const response = await request(app).post(baseUrl + "/refresh").set('Cookie', `refreshToken=${testUser.refreshToken}`);
     expect(response.statusCode).toBe(200);
     expect(response.body.accessToken).toBeDefined();
     expect(response.body.refreshToken).toBeDefined();
     testUser.accessToken = response.body.accessToken;
     testUser.refreshToken = response.body.refreshToken;
 
-    const response2 = await request(app).post(baseUrl + "/refresh").send({
-      refreshToken: '',
-    });
+    const response2 = await request(app).post(baseUrl + "/refresh");
     expect(response2.statusCode).not.toBe(200); // ציפייה לכישלון
   });
 
   test("Double use refresh token", async () => {
-    const response = await request(app).post(baseUrl + "/refresh").send({
-      refreshToken: testUser.refreshToken,
-    });
+    const response = await request(app).post(baseUrl + "/refresh").set('Cookie', `refreshToken=${testUser.refreshToken}`);
     expect(response.statusCode).toBe(200);
     const refreshTokenNew = response.body.refreshToken;
 
-    const response2 = await request(app).post(baseUrl + "/refresh").send({
-      refreshToken: testUser.refreshToken,
-    });
+    const response2 = await request(app).post(baseUrl + "/refresh").set('Cookie', `refreshToken=${testUser.refreshToken}`);
     expect(response2.statusCode).not.toBe(200);
 
     const response3 = await request(app).post(baseUrl + "/refresh").send({
@@ -152,17 +144,14 @@ describe("Auth Tests", () => {
     expect(response.statusCode).toBe(200);
     testUser.accessToken = response.body.accessToken;
     testUser.refreshToken = response.body.refreshToken;
-
-    const response2 = await request(app).post(baseUrl + "/logout").send({
-      refreshToken: testUser.refreshToken,
-    });
+    const response2 = await request(app)
+        .post(baseUrl + "/logout")
+        .set('Cookie', `refreshToken=${testUser.refreshToken}`);
     expect(response2.statusCode).toBe(200);
-
-    const response3 = await request(app).post(baseUrl + "/refresh").send({
-      refreshToken: testUser.refreshToken,
-    });
+    const response3 = await request(app)
+        .post(baseUrl + "/refresh")
+        .set('Cookie', `refreshToken=${testUser.refreshToken}`);
     expect(response3.statusCode).not.toBe(200);
-
   });
 
   jest.setTimeout(10000);
@@ -191,17 +180,13 @@ describe("Auth Tests", () => {
     });
     expect(response2.statusCode).not.toBe(201);
 
-    const response3 = await request(app).post(baseUrl + "/refresh").send({
-      refreshToken: testUser.refreshToken,
-    });
+    const response3 = await request(app).post(baseUrl + "/refresh").set('Cookie', `refreshToken=${testUser.refreshToken}`);
     expect(response3.statusCode).toBe(200);
     testUser.accessToken = response3.body.accessToken;
   });
 });
 
   test("Auth test logout failure", async () => {
-    const response = await request(app).post(baseUrl + "/logout").send({
-      refreshToken: "invalidRefreshToken",
-    });
+    const response = await request(app).post(baseUrl + "/logout").set('Cookie', `refreshToken=${testUser.refreshToken}`);
     expect(response.statusCode).not.toBe(200);
   });
