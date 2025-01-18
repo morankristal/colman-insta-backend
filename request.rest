@@ -58,20 +58,29 @@ Content-Type: application/json
 
 # Create a new post
 POST http://localhost:3000/posts
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzgzZjUzNmQyNWEwODMyZDc0ZWVkODQiLCJyYW5kb20iOiIwLjM4MjU5NzA0OTM1OTQ1MDQiLCJpYXQiOjE3MzY3MDEyNDEsImV4cCI6MTczNzMwNjA0MX0.2zDDJq6RNwyVX6ojH1Row0NwVacN9IRq_XX4sa7BQt0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Nzg5MWQzMjZhYjAzMjUzNjc2ZWJmNzUiLCJyYW5kb20iOiIwLjcwMjg3NDg5MTkwMjI4NTYiLCJpYXQiOjE3MzcxOTQ0MDEsImV4cCI6MTczNzc5OTIwMX0.JPVnhhfyMz2qwC5V8TPXvcMuaIsaDKyshpDQQ_eKotI
+Content-Type: multipart/form-data; boundary=----MyBoundary
 
-{
-  "title": "3",
-  "content": "This is the content of the first post"
-}
+------MyBoundary
+Content-Disposition: form-data; name="title"
 
+This is the title of the post
+------MyBoundary
+Content-Disposition: form-data; name="content"
+
+This is the content of the post
+------MyBoundary
+Content-Disposition: form-data; name="image"; filename="GOODDAY.png"
+Content-Type: image/png
+
+< C:\Users\moran\OneDrive\מסמכים\GOODDAY.png
+------MyBoundary--
 
 ###
 
 # Update a post by ID
 
-PUT http://localhost:3000/posts/6783ec8c903e34c4bc369b98
+PUT http://localhost:3000/posts/999f999f9f9999f99f9f9f9f
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzgzZDgzZTFmZjRkZjc4YjE2YzhlNmEiLCJyYW5kb20iOiIwLjE0OTM4NzM1ODk5MDQ3MDYyIiwiaWF0IjoxNzM2NjkzODMyLCJleHAiOjE3MzcyOTg2MzJ9.bs-3lsF_mYuPqBc7fh5396HHYxtXEdIXj3JntoGU8Ks
 
@@ -92,7 +101,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzgzZDgzZ
 # get all post that user liked
 GET http://localhost:3000/posts/liked
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzgzZDgzZTFmZjRkZjc4YjE2YzhlNmEiLCJyYW5kb20iOiIwLjQ1NTUwNjA4MTkyMDU3Mzg1IiwiaWF0IjoxNzM2Njk4Njg1LCJleHAiOjE3MzczMDM0ODV9.PkP_fwz5TQnBMPf0wS05Ncwg3haamTr9ea56326Qh7Q
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Nzg5MWQzMjZhYjAzMjUzNjc2ZWJmNzUiLCJyYW5kb20iOiIwLjM4MTQ0MDYyODY0NDk2MDMiLCJpYXQiOjE3MzcwMzkxNTYsImV4cCI6MTczNzY0Mzk1Nn0.-gfuCX-vGp3x2XMbIQ5fy-uLhWWuXGcMrcr0LD-W2bE
 
 ###
 

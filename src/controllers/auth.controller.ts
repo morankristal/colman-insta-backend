@@ -80,19 +80,18 @@ const login = async (req: Request, res: Response) => {
         user.refreshToken.push(tokens.refreshToken);
         await user.save();
 
-        // שליחת ה-JWT כ-Cookie
         res.cookie('accessToken', tokens.accessToken, {
-            httpOnly: false, // כדי למנוע גישה מ-JavaScript
+            httpOnly: false,
             secure: false,
-            sameSite: 'lax', // שים לב לשנות ל-lax
-            maxAge: 60 * 60 * 1000 // תוקף של שעה
+            sameSite: 'lax',
+            maxAge: 3 * 24 * 60 * 60 * 1000
         });
 
         res.cookie('refreshToken', tokens.refreshToken, {
             httpOnly: false,
             secure: false,
-            sameSite: 'lax', // שים לב לשנות ל-lax
-            maxAge: 7 * 24 * 60 * 60 * 1000 // תוקף של שבוע
+            sameSite: 'lax',
+            maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
         res.status(200).send({
@@ -106,45 +105,6 @@ const login = async (req: Request, res: Response) => {
     }
 };
 
-// const login = async (req: Request, res: Response) => {
-//     try {
-//         const user = await User.findOne({ username: req.body.username });
-//         if (!user) {
-//             res.status(400).send('wrong username or password');
-//             return;
-//         }
-//
-//         const validPassword = await bcrypt.compare(req.body.password, user.password);
-//
-//         if (!validPassword) {
-//             res.status(400).send('wrong username or password');
-//             return;
-//         }
-//         if (!process.env.TOKEN_SECRET) {
-//             res.status(500).send('Server Error');
-//             return;
-//         }
-//         const tokens = generateToken(user._id);
-//         if (!tokens) {
-//             res.status(500).send('Server Error');
-//             return;
-//         }
-//         if (!user.refreshToken) {
-//             user.refreshToken = [];
-//         }
-//         user.refreshToken.push(tokens.refreshToken);
-//         await user.save();
-//         res.status(200).send(
-//             {
-//                 accessToken: tokens.accessToken,
-//                 refreshToken: tokens.refreshToken,
-//                 _id: user._id
-//             });
-//
-//     } catch (err) {
-//         res.status(400).send(err);
-//     }
-// };
 
 type tUser = Document<unknown, {}, IUser> & IUser & Required<{
     _id: string;
@@ -194,35 +154,6 @@ const verifyRefreshToken = (refreshToken: string | undefined) => {
     });
 };
 
-// const refresh = async (req: Request, res: Response) => {
-//     try {
-//         const user = await verifyRefreshToken(req.body.refreshToken);
-//         if (!user) {
-//             res.status(400).send("fail to verify refresh token in refresh");
-//             return;
-//         }
-//         const tokens = generateToken(user._id);
-//         if (!tokens) {
-//             res.status(500).send('Server Error');
-//             return;
-//         }
-//         if (!user.refreshToken) {
-//             user.refreshToken = [];
-//         }
-//         user.refreshToken.push(tokens.refreshToken);
-//         await user.save();
-//         res.status(200).send(
-//             {
-//                 accessToken: tokens.accessToken,
-//                 refreshToken: tokens.refreshToken,
-//                 _id: user._id
-//             });
-//
-//     } catch (err) {
-//         console.log(err)
-//         res.status(400).send("fail in refresh");
-//     }
-// };
 const refresh = async (req: Request, res: Response) => {
     try {
         const refreshToken = req.cookies['refreshToken']
@@ -244,16 +175,15 @@ const refresh = async (req: Request, res: Response) => {
         user.refreshToken.push(tokens.refreshToken);
         await user.save();
 
-        // עדכון הקוקיז עם הטוקנים החדשים
         res.cookie('accessToken', tokens.accessToken, {
-            httpOnly: true,
+            httpOnly: false,
             secure: false,
-            sameSite: 'strict',
-            maxAge: 60 * 60 * 1000 // שעה
+            sameSite: 'lax',
+            maxAge: 3 * 24 * 60 * 60 * 1000
         });
 
         res.cookie('refreshToken', tokens.refreshToken, {
-            httpOnly: true,
+            httpOnly: false,
             secure: false,
             sameSite: 'strict',
             maxAge: 7 * 24 * 60 * 60 * 1000 // שבוע
@@ -272,26 +202,15 @@ const refresh = async (req: Request, res: Response) => {
     }
 };
 
-// const logout = async (req: Request, res: Response) => {
-//     try {
-//         const user = await verifyRefreshToken(req.body.refreshToken);
-//         await user.save();
-//         res.status(200).send("success");
-//     } catch (err) {
-//         res.status(400).send("fail");
-//     }
-// };
 
 const logout = async (req: Request, res: Response) => {
     try {
         const refreshToken = req.cookies['refreshToken']
         const user = await verifyRefreshToken(refreshToken);
 
-        // ניקוי רשימת ה-Refresh Tokens אצל המשתמש
         user.refreshToken = [];
         await user.save();
 
-        // מחיקת הקוקיז
         res.clearCookie('accessToken');
         res.clearCookie('refreshToken');
 

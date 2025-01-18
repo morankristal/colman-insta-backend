@@ -17,6 +17,7 @@ import authRouter from "./src/routes/auth.router";
 import swaggerUi from "swagger-ui-express";
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerOptions from "./swagger";
+import path from "path";
 
 const app: Express = express();
 app.use(cors({
@@ -26,7 +27,7 @@ app.use(cors({
 
 const swaggerSpec = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
+app.use('/uploads', express.static('src/common'));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use("/posts", postRouter);

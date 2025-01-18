@@ -33,10 +33,22 @@ class BaseController<T> {
 
     async create(req: Request, res: Response) {
         const userId = req.params.userId;
+
         if (!userId) {
             return res.status(401).send({ error: "Unauthorized: User ID is missing" });
         }
+
+        // הוספת נתיב התמונה אם קיים
+        const imagePath = req.file ? `images/${req.file.filename}` : undefined;
+
+        // שילוב המידע מהבקשה
         const body = { ...req.body, sender: userId };
+
+        // אם מדובר בפוסט, נוסיף את נתיב התמונה
+        if (this.model.modelName === "Post" && imagePath) {
+            body.image = imagePath;
+        }
+
         try {
             const item = await this.model.create(body);
             res.status(201).send(item);

@@ -7,6 +7,7 @@ import testPosts from "./test_posts.json";
 import testUsers from "./test_users.json";
 import User ,{ IUser } from "../src/models/user.model";
 
+
 var app: Express;
 let postId: string = "";
 
@@ -73,7 +74,8 @@ describe("Post Tests", () => {
             title: "New Post Title",
             content: "This is a new post.",
             sender: testUser.id,
-        };
+            image: "src/common/images/1737040457880-רקע עלים ופרחים חום.jpg"
+    };
         const failresponse = await request(app).post("/posts").send(newPost)
         expect(failresponse.statusCode).not.toBe(201)
         const response = await request(app).post("/posts").set(

@@ -24,7 +24,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
         }
         req.params.userId = (payload as Payload)._id;
         next();
-    });
+    })
 };
 
 export default authMiddleware;
