@@ -37,14 +37,10 @@ class BaseController<T> {
         if (!userId) {
             return res.status(401).send({ error: "Unauthorized: User ID is missing" });
         }
-
-        // הוספת נתיב התמונה אם קיים
         const imagePath = req.file ? `images/${req.file.filename}` : undefined;
 
-        // שילוב המידע מהבקשה
         const body = { ...req.body, sender: userId };
 
-        // אם מדובר בפוסט, נוסיף את נתיב התמונה
         if (this.model.modelName === "Post" && imagePath) {
             body.image = imagePath;
         }

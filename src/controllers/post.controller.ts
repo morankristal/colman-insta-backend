@@ -3,6 +3,9 @@ import Post from "../models/post.model";
 import { IPost } from "../models/post.model";
 import BaseController from "./baseController";
 import mongoose from "mongoose";
+import fs from "fs";
+import path from "path";
+
 
 // const postController = new BaseController<IPost>(Post);
 
@@ -13,24 +16,47 @@ class PostController extends BaseController<IPost> {
 
     async update(req: Request, res: Response) {
         const id = req.params.id;
-        const updateData = req.body;
         const userId = req.params.userId;
+        const updateData = req.body;
+
         try {
             const item = await this.model.findById(id);
             if (!item) {
                 return res.status(404).send("Not found");
             }
 
-            if(userId && userId !== item.sender.toString()){
+            // בדיקת הרשאות
+            if (userId && userId !== item.sender.toString()) {
                 return res.status(403).send("You are not authorized to update this post");
             }
 
+            // מחיקת התמונה הקודמת אם התמונה מתעדכנת
+            if (req.file && item.image) {
+                const oldImagePath = path.join(__dirname, "../common/", item.image);
+                fs.unlink(oldImagePath, (err) => {
+                    if (err) {
+                        console.error("Error deleting old image:", err);
+                    } else {
+                        console.log("Old image deleted successfully:", oldImagePath);
+                    }
+                });
+            }
+
+            // עדכון התמונה החדשה אם קיימת
+            if (req.file) {
+                const newImagePath = `images/${req.file.filename}`;
+                updateData.image = newImagePath;
+            }
+
+            // עדכון הפריט ב-DB
             const updatedItem = await this.model.findByIdAndUpdate(id, updateData, { new: true });
             res.status(200).send(updatedItem);
         } catch (error) {
             res.status(400).send(error);
         }
     }
+
+
 
 
     async delete(req: Request, res: Response): Promise<Response> {
@@ -47,12 +73,23 @@ class PostController extends BaseController<IPost> {
                 return res.status(403).send("You are not authorized to delete this post");
             }
 
+            // מחיקת התמונה אם קיימת
+            if (item.image) {
+                const imagePath = path.join(__dirname, "../common/", item.image);
+                fs.unlink(imagePath, (err) => {
+                    if (err) {
+                        console.error("Error deleting image:", err);
+                    }
+                });
+            }
+
             await this.model.findByIdAndDelete(id);
             return res.status(200).send({ message: "Post deleted successfully" });
         } catch (error) {
             return res.status(400).send(error);
         }
     }
+
 
     async getPostsBySender(req: Request, res: Response) {
         const userId = req.params.senderId;

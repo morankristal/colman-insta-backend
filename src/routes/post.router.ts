@@ -96,7 +96,7 @@ router.get("/getBySender/:senderId", async (req: Request, res: Response): Promis
  *       404:
  *         description: Post not found
  */
-router.put("/:id", authMiddleware, async (req: Request, res: Response): Promise<void> => {
+router.put("/:id", authMiddleware, upload.single("image"),  async (req: Request, res: Response): Promise<void> => {
     await postController.update(req, res);
 });
 

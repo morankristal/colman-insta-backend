@@ -6,6 +6,7 @@ import Post from "../src/models/post.model";
 import testPosts from "./test_posts.json";
 import testUsers from "./test_users.json";
 import User ,{ IUser } from "../src/models/user.model";
+import path from "path";
 
 
 var app: Express;
@@ -74,7 +75,7 @@ describe("Post Tests", () => {
             title: "New Post Title",
             content: "This is a new post.",
             sender: testUser.id,
-            image: "src/common/images/1737040457880-רקע עלים ופרחים חום.jpg"
+            image: "images/1737381621052-classic-cheese-pizza-FT-RECIPE0422-31a2c938fc2546c9a07b7011658cfd05.jpg"
     };
         const failresponse = await request(app).post("/posts").send(newPost)
         expect(failresponse.statusCode).not.toBe(201)
@@ -136,6 +137,43 @@ describe("Post Tests", () => {
         expect(response.body.title).toBe(updatedPost.title);
         expect(response.body.content).toBe(updatedPost.content);
     });
+
+    test("Update post with a new image", async () => {
+        const updatedPost = {
+            title: "Updated Post with New Image",
+            content: "This is an updated post with a new image."
+        };
+
+        const response = await request(app)
+            .put(`/posts/${postId}`)
+            .set({ authorization: "JWT " + testUser.accessToken })
+            .field("title", updatedPost.title)
+            .field("content", updatedPost.content)
+
+        expect(response.statusCode).toBe(200);
+        expect(response.body.title).toBe(updatedPost.title);
+        expect(response.body.content).toBe(updatedPost.content);
+        expect(response.body.image).toContain("images/"); // תוודא שהתמונה החדשה נמצאת במסלול המתאים
+    });
+
+    test("Fail to create post with invalid image type", async () => {
+        const newPost = {
+            title: "New Post with Invalid Image",
+            content: "This post contains an invalid image type.",
+            sender: testUser.id,
+            image: "images/1737381621052-classic-cheese-pizza-FT-RECIPE0422-31a2c938fc2546c9a07b7011658cfd05.txt"
+        };
+
+        const response = await request(app)
+            .post("/posts")
+            .set({ authorization: "JWT " + testUser.accessToken })
+            .field("title", newPost.title)
+            .field("content", newPost.content)
+
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toBe("Post validation failed: image: Path `image` is required.");
+    });
+
 
     test("Update a post does not exists", async () => {
         const updatedPost = { title: "Updated Post Title", content: "Updated post content" };
