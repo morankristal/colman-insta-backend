@@ -6,6 +6,8 @@ import Post from "../src/models/post.model";
 import testPosts from "./test_posts.json";
 import testUsers from "./test_users.json";
 import User ,{ IUser } from "../src/models/user.model";
+import path from "path";
+
 
 var app: Express;
 let postId: string = "";
@@ -28,8 +30,8 @@ beforeAll(async () => {
 
     await Post.deleteMany();
     await User.deleteMany();
-    await User.insertMany(testUsers); //Run only if it does not exist in the DB
-    await Post.insertMany(testPosts); //Run only if it does not exist in the DB
+    await User.insertMany(testUsers);
+    await Post.insertMany(testPosts);
 
     const res = await request(app).post('/auth/register').send(testUser)
     testUser.id = res.body._id
@@ -73,11 +75,10 @@ describe("Post Tests", () => {
             title: "New Post Title",
             content: "This is a new post.",
             sender: testUser.id,
-        };
+            image: "images/1737381621052-classic-cheese-pizza-FT-RECIPE0422-31a2c938fc2546c9a07b7011658cfd05.jpg"
+    };
         const failresponse = await request(app).post("/posts").send(newPost)
         expect(failresponse.statusCode).not.toBe(201)
-
-        console.log(testUser.id)
         const response = await request(app).post("/posts").set(
             { authorization: "JWT " + testUser.accessToken })
             .send(newPost)
@@ -137,6 +138,43 @@ describe("Post Tests", () => {
         expect(response.body.content).toBe(updatedPost.content);
     });
 
+    test("Update post with a new image", async () => {
+        const updatedPost = {
+            title: "Updated Post with New Image",
+            content: "This is an updated post with a new image."
+        };
+
+        const response = await request(app)
+            .put(`/posts/${postId}`)
+            .set({ authorization: "JWT " + testUser.accessToken })
+            .field("title", updatedPost.title)
+            .field("content", updatedPost.content)
+
+        expect(response.statusCode).toBe(200);
+        expect(response.body.title).toBe(updatedPost.title);
+        expect(response.body.content).toBe(updatedPost.content);
+        expect(response.body.image).toContain("images/"); // תוודא שהתמונה החדשה נמצאת במסלול המתאים
+    });
+
+    test("Fail to create post with invalid image type", async () => {
+        const newPost = {
+            title: "New Post with Invalid Image",
+            content: "This post contains an invalid image type.",
+            sender: testUser.id,
+            image: "images/1737381621052-classic-cheese-pizza-FT-RECIPE0422-31a2c938fc2546c9a07b7011658cfd05.txt"
+        };
+
+        const response = await request(app)
+            .post("/posts")
+            .set({ authorization: "JWT " + testUser.accessToken })
+            .field("title", newPost.title)
+            .field("content", newPost.content)
+
+        expect(response.statusCode).toBe(400);
+        expect(response.body.error).toBe("Post validation failed: image: Path `image` is required.");
+    });
+
+
     test("Update a post does not exists", async () => {
         const updatedPost = { title: "Updated Post Title", content: "Updated post content" };
         const response = await request(app)
@@ -155,6 +193,85 @@ describe("Post Tests", () => {
         expect(response.statusCode).toBe(403);
         expect(response.text).toBe("You are not authorized to update this post");
     });
+
+    describe("Like Tests", () => {
+        test("Like a post", async () => {
+            const response = await request(app)
+                .post(`/posts/${postId}/like`)
+                .set({ authorization: "JWT " + testUser.accessToken });
+            expect(response.statusCode).toBe(200);
+            expect(response.body.message).toBe("Post liked successfully");
+            const postResponse = await request(app).get(`/posts/${postId}`);
+            expect(postResponse.statusCode).toBe(200);
+            expect(postResponse.body.likes).toContain(testUser.id);
+        });
+
+        test("Unlike a post", async () => {
+            const response = await request(app)
+                .post(`/posts/${postId}/like`)
+                .set({ authorization: "JWT " + testUser.accessToken });
+
+            expect(response.statusCode).toBe(200);
+            expect(response.body.message).toBe("Post unliked successfully");
+
+            const response2 = await request(app)
+                .post(`/posts/${postId}/like`)
+                .set({ authorization: "JWT " + testUser.accessToken });
+            expect(response2.statusCode).toBe(200);
+            expect(response2.body.message).toBe("Post liked successfully");
+        });
+
+        test("fail like a post", async () => {
+            await mongoose.disconnect();
+            const response = await request(app)
+                .post(`/posts/${postId}/like`)
+                .set({ authorization: "JWT " + testUser.accessToken });
+            expect(response.statusCode).toBe(400);
+            app = await initApp();
+        });
+
+        test("Get liked posts", async () => {
+            const response = await request(app)
+                .get(`/posts/liked`)
+                .set({ authorization: "JWT " + testUser.accessToken });
+            expect(response.statusCode).toBe(200);
+            expect(response.body.length).toBe(1); // Assuming 1 post is liked
+            expect(response.body[0]._id).toBe(postId);
+        });
+
+        test("Like a post - post not found", async () => {
+            const response = await request(app)
+                .post(`/posts/888f888f8f8888f88f8f8f8f/like`)
+                .set({ authorization: "JWT " + testUser.accessToken });
+            expect(response.statusCode).toBe(404);
+            expect(response.body.message).toBe("Post not found");
+        });
+
+        test("Get liked posts - no posts liked", async () => {
+            const response2 = await request(app)
+                .post(`/posts/${postId}/like`)
+                .set({ authorization: "JWT " + testUser.accessToken });
+            expect(response2.statusCode).toBe(200);
+            expect(response2.body.message).toBe( "Post unliked successfully");
+
+            const response = await request(app)
+                .get("/posts/liked")
+                .set({ authorization: "JWT " + testUser.accessToken });
+
+            expect(response.statusCode).toBe(404);
+            expect(response.body.message).toBe( "No liked posts found");
+        });
+
+        test("fail get liked posts", async () => {
+            await mongoose.disconnect();
+            const response = await request(app)
+                .get("/posts/liked")
+                .set({ authorization: "JWT " + testUser.accessToken });
+            expect(response.statusCode).toBe(400);
+            app = await initApp();
+        });
+    });
+
 
     test("Delete a post does not exists", async () => {
         const response = await request(app).delete(`/posts/123f123f1f1234f12f1f1f1f`).set(

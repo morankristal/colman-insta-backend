@@ -64,6 +64,18 @@ describe("User Tests", () => {
         app = await initApp();
     });
 
+    test("Get user by username", async () => {
+        const response = await request(app).get(`/users/username/unique_user`);
+        expect(response.statusCode).toBe(200);
+        expect(response.body.username).toBe("unique_user");
+    });
+
+    test("Fail to get user by username (not found)", async () => {
+        const response = await request(app).get(`/users/username/nonexistent_user`);
+        expect(response.statusCode).toBe(404);
+    });
+
+
     test("Test Update User", async () => {
         const updatedUser = { username: "updated_user", email: "updated_user@example.com" };
         const response = await request(app).put(`/users/${userId}`).send(updatedUser);

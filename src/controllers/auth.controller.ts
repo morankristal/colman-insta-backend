@@ -62,31 +62,49 @@ const login = async (req: Request, res: Response) => {
             res.status(400).send('wrong username or password');
             return;
         }
+
         if (!process.env.TOKEN_SECRET) {
             res.status(500).send('Server Error');
             return;
         }
+
         const tokens = generateToken(user._id);
         if (!tokens) {
             res.status(500).send('Server Error');
             return;
         }
+
         if (!user.refreshToken) {
             user.refreshToken = [];
         }
         user.refreshToken.push(tokens.refreshToken);
         await user.save();
-        res.status(200).send(
-            {
-                accessToken: tokens.accessToken,
-                refreshToken: tokens.refreshToken,
-                _id: user._id
-            });
 
+        res.cookie('accessToken', tokens.accessToken, {
+            httpOnly: false,
+            secure: false,
+            sameSite: 'lax',
+            maxAge: 3 * 24 * 60 * 60 * 1000
+        });
+
+        res.cookie('refreshToken', tokens.refreshToken, {
+            httpOnly: false,
+            secure: false,
+            sameSite: 'lax',
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        });
+
+        res.status(200).send({
+            _id: user._id,
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken,
+            message: 'Login successful',
+        });
     } catch (err) {
         res.status(400).send(err);
     }
 };
+
 
 type tUser = Document<unknown, {}, IUser> & IUser & Required<{
     _id: string;
@@ -138,43 +156,70 @@ const verifyRefreshToken = (refreshToken: string | undefined) => {
 
 const refresh = async (req: Request, res: Response) => {
     try {
-        const user = await verifyRefreshToken(req.body.refreshToken);
+        const refreshToken = req.cookies['refreshToken']
+        const user = await verifyRefreshToken(refreshToken);
         if (!user) {
             res.status(400).send("fail to verify refresh token in refresh");
             return;
         }
+
         const tokens = generateToken(user._id);
         if (!tokens) {
             res.status(500).send('Server Error');
             return;
         }
+
         if (!user.refreshToken) {
             user.refreshToken = [];
         }
         user.refreshToken.push(tokens.refreshToken);
         await user.save();
-        res.status(200).send(
-            {
-                accessToken: tokens.accessToken,
-                refreshToken: tokens.refreshToken,
-                _id: user._id
-            });
+
+        res.cookie('accessToken', tokens.accessToken, {
+            httpOnly: false,
+            secure: false,
+            sameSite: 'lax',
+            maxAge: 3 * 24 * 60 * 60 * 1000
+        });
+
+        res.cookie('refreshToken', tokens.refreshToken, {
+            httpOnly: false,
+            secure: false,
+            sameSite: 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000 // שבוע
+        });
+
+        res.status(200).send({
+            _id: user._id,
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken,
+            message: 'Tokens refreshed successfully',
+        });
 
     } catch (err) {
-        console.log(err)
+        console.log(err);
         res.status(400).send("fail in refresh");
     }
 };
 
+
 const logout = async (req: Request, res: Response) => {
     try {
-        const user = await verifyRefreshToken(req.body.refreshToken);
+        const refreshToken = req.cookies['refreshToken']
+        const user = await verifyRefreshToken(refreshToken);
+
+        user.refreshToken = [];
         await user.save();
+
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
+
         res.status(200).send("success");
     } catch (err) {
         res.status(400).send("fail");
     }
 };
+
 
 export default {
     register,
