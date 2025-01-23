@@ -163,8 +163,7 @@ describe("Comments Tests", () => {
         const emptyPostId = "444f444f4f4444f44f1f1f1f"; // A post ID not in test data
         const response = await request(app).get(`/comments/getByPost/${emptyPostId}`).set(
             { authorization: "JWT " + testUser.accessToken });
-        expect(response.statusCode).toBe(404);
-        expect(response.body.message).toBe("No comments found for this post");
+        expect(response.statusCode).toBe(200);
     });
 
     test("Fail to get comments for a non-existing post", async () => {

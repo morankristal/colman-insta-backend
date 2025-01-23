@@ -24,13 +24,9 @@ class PostController extends BaseController<IPost> {
             if (!item) {
                 return res.status(404).send("Not found");
             }
-
-            // בדיקת הרשאות
             if (userId && userId !== item.sender.toString()) {
                 return res.status(403).send("You are not authorized to update this post");
             }
-
-            // מחיקת התמונה הקודמת אם התמונה מתעדכנת
             if (req.file && item.image) {
                 const oldImagePath = path.join(__dirname, "../common/", item.image);
                 fs.unlink(oldImagePath, (err) => {
@@ -42,14 +38,11 @@ class PostController extends BaseController<IPost> {
                 });
             }
 
-            // עדכון התמונה החדשה אם קיימת
             if (req.file) {
                 const newImagePath = `images/${req.file.filename}`;
                 updateData.image = newImagePath;
             }
-
-            // עדכון הפריט ב-DB
-            const updatedItem = await this.model.findByIdAndUpdate(id, updateData, { new: true });
+            const updatedItem = await this.model.findByIdAndUpdate(id, updateData,{ new: true });
             res.status(200).send(updatedItem);
         } catch (error) {
             res.status(400).send(error);
@@ -73,7 +66,6 @@ class PostController extends BaseController<IPost> {
                 return res.status(403).send("You are not authorized to delete this post");
             }
 
-            // מחיקת התמונה אם קיימת
             if (item.image) {
                 const imagePath = path.join(__dirname, "../common/", item.image);
                 fs.unlink(imagePath, (err) => {
