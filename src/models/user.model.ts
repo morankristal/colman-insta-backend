@@ -50,6 +50,8 @@ const userSchema = new Schema<IUser>({
         unique: true,
     },
 });
+}, { versionKey: false });
+
 
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();
