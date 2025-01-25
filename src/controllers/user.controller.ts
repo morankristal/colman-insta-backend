@@ -9,19 +9,42 @@ class userController extends BaseController<IUser> {
         super(User);
     }
 
-async getByUsername(req: Request, res: Response) {
-    const username = req.params.username;
-    try {
-        const user = await User.findOne({ username });
+    async searchByUsername(req: Request, res: Response) {
+        const usernameQuery = req.params.username;
 
-        if (user) {
-            res.status(200).send(user);
-        } else {
-            res.status(404).send("User not found");
+        if (!usernameQuery) {
+            return res.status(400).send("Username query parameter is required");
         }
-    } catch (error) {
-        res.status(400).send(error);
-     }
+
+        try {
+            const users = await User.find({
+                username: { $regex: usernameQuery, $options: "i" },
+            });
+
+            if (users.length > 0) {
+                res.status(200).send(users);
+            } else {
+                res.status(404).send("No users found matching that username");
+            }
+        } catch (error) {
+            res.status(400).send(error);
+        }
+    }
+
+
+    async getByUsername(req: Request, res: Response) {
+        const username = req.params.username;
+        try {
+            const user = await User.findOne({ username });
+
+            if (user) {
+                res.status(200).send(user);
+            } else {
+                res.status(404).send("User not found");
+            }
+        } catch (error) {
+            res.status(400).send(error);
+        }
     }
 }
 
