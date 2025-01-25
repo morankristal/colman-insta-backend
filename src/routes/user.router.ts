@@ -90,6 +90,35 @@ router.get("/username/:username", async (req: Request, res: Response): Promise<v
 
 /**
  * @swagger
+ * /users/search:
+ *   get:
+ *     summary: Search for users by username
+ *     tags: [Users]
+ *     parameters:
+ *       - in: query
+ *         name: username
+ *         required: true
+ *         description: Partial or full username to search for
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: A list of matching users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       404:
+ *         description: No users found
+ */
+router.get("/search/:username", async (req: Request, res: Response): Promise<void> => {
+    await userController.searchByUsername(req, res);
+});
+
+/**
+ * @swagger
  * /users/{id}:
  *   put:
  *     summary: Update a user by ID

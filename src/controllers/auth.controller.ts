@@ -1,13 +1,75 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
+import bcrypt, { compare } from 'bcrypt';
 import User, { IUser } from "../models/user.model";
+import { OAuth2Client } from "google-auth-library";
 import { Document } from 'mongoose';
 
 type tTokens = {
     accessToken: string,
     refreshToken: string
 }
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+const googleLogin = async (req: Request, res: Response) => {
+    try {
+        const tokenId = req.body.credential;
+
+        const ticket = await client.verifyIdToken({
+            idToken: tokenId,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+        const payload = ticket.getPayload();
+
+        if (!payload) {
+            return res.status(400).send('Invalid Google token');
+        }
+
+        let user = await User.findOne({ googleId: payload.sub });
+
+        if (!user) {
+            user = new User({
+                username: payload.name,
+                email: payload.email,
+                googleId: payload.sub,
+                profilePicture: payload.picture,
+                password: "",
+                refreshToken: [],
+            });
+            await user.save();
+        }
+
+        const tokens = generateToken(user._id);
+        if (!tokens) {
+            return res.status(500).send('Server Error');
+        }
+
+        res.cookie('accessToken', tokens.accessToken, {
+            httpOnly: false,
+            secure: false,
+            sameSite: 'lax',
+            maxAge: 3 * 24 * 60 * 60 * 1000
+        });
+
+        res.cookie('refreshToken', tokens.refreshToken, {
+            httpOnly: false,
+            secure: false,
+            sameSite: 'lax',
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        });
+
+        res.status(200).send({
+            _id: user._id,
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken,
+            message: 'Login successful',
+        });
+
+    } catch (err) {
+        res.status(400).send('Google login failed: ' + err);
+    }
+};
 
 const generateToken = (userId: string): tTokens | null => {
     if (!process.env.TOKEN_SECRET) {
@@ -53,6 +115,11 @@ const login = async (req: Request, res: Response) => {
         const user = await User.findOne({ username: req.body.username });
         if (!user) {
             res.status(400).send('wrong username or password');
+            return;
+        }
+
+        if (user.googleId && !req.body.password) {
+            res.status(400).send('Please login with Google');
             return;
         }
 
@@ -127,15 +194,21 @@ const verifyRefreshToken = (refreshToken: string | undefined) => {
                 reject("faield to verify in verify refresh token");
                 return
             }
-           
+
             const userId = payload._id;
             try {
-                
+
                 const user = await User.findById(userId);
                 if (!user) {
                     reject("cannot find user in verify refresh token");
                     return;
                 }
+
+                if (user.googleId) {
+                    resolve(user); 
+                    return;
+                }
+
                 if (!user.refreshToken || !user.refreshToken.includes(refreshToken)) {
                     user.refreshToken = [];
                     await user.save();
@@ -186,7 +259,7 @@ const refresh = async (req: Request, res: Response) => {
             httpOnly: false,
             secure: false,
             sameSite: 'lax',
-            maxAge: 7 * 24 * 60 * 60 * 1000 // שבוע
+            maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
         res.status(200).send({
@@ -205,17 +278,35 @@ const refresh = async (req: Request, res: Response) => {
 const logout = async (req: Request, res: Response) => {
     try {
         const refreshToken = req.cookies['refreshToken']
+
+        if (!refreshToken) {
+            res.status(400).send("No refresh token provided in logout");
+            return;
+        }
+
         const user = await verifyRefreshToken(refreshToken);
 
+        if (!user) {
+            res.status(400).send("Failed to verify refresh token in logout");
+            return;
+        }
+
+        if (user.googleId) {
+            res.clearCookie('accessToken');
+            res.clearCookie('refreshToken');
+            res.status(200).send("Logged out successfully (Google user)");
+            return;
+        }
+        
         user.refreshToken = [];
         await user.save();
 
         res.clearCookie('accessToken');
         res.clearCookie('refreshToken');
 
-        res.status(200).send("success");
+        res.status(200).send("Logged out successfully");
     } catch (err) {
-        res.status(400).send("fail");
+        res.status(400).send("Logout failed");
     }
 };
 
@@ -224,5 +315,6 @@ export default {
     register,
     login,
     refresh,
-    logout
+    logout,
+    googleLogin
 };

@@ -9,6 +9,7 @@ export interface IUser extends Document {
     _id: string;
     refreshToken: string[];
     profilePicture: string;
+    googleId?: string;
 }
 
 const userSchema = new Schema<IUser>({
@@ -28,7 +29,13 @@ const userSchema = new Schema<IUser>({
     },
     password: {
         type: String,
-        required: true,
+        required: function (this: IUser) { return !this.googleId; },
+        validate: {
+            validator: function (v: string) {
+                return !!this.googleId || v.length > 0;
+            },
+            message: "Password is required"
+        },
     },
     refreshToken: {
         type: [String],
@@ -38,8 +45,13 @@ const userSchema = new Schema<IUser>({
         type: String,
         default: '',
     },
-
+    googleId: {
+        type: String,
+        unique: true,
+    },
+});
 }, { versionKey: false });
+
 
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();

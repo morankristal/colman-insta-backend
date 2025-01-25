@@ -71,6 +71,65 @@ router.post("/register", authController.register);
 
 /**
  * @swagger
+ * /auth/google-login:
+ *   post:
+ *     summary: Google login
+ *     description: Authenticate user using Google credentials and return tokens
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               credential:
+ *                 type: string
+ *                 description: The JWT token from Google
+ *                 example: eyJhbGciOiJSUzI1NiIsImtpZCI6...
+ *     responses:
+ *       200:
+ *         description: Successful login
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
+ *                 refreshToken:
+ *                   type: string
+ *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       example: 677d73cb078b2de431854372
+ *                     email:
+ *                       type: string
+ *                       example: user@gmail.com
+ *                     name:
+ *                       type: string
+ *                       example: Ronen
+ *       400:
+ *         description: Invalid Google token
+ *       500:
+ *         description: Server error
+ */
+router.post("/google-login", async (req: Request, res: Response) => {
+    try {
+        await authController.googleLogin(req, res);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error: ' + error);
+    }
+});
+
+/**
+ * @swagger
  * /auth/login:
  *   post:
  *     summary: User login
