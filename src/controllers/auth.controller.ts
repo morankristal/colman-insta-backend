@@ -185,7 +185,7 @@ const refresh = async (req: Request, res: Response) => {
         res.cookie('refreshToken', tokens.refreshToken, {
             httpOnly: false,
             secure: false,
-            sameSite: 'strict',
+            sameSite: 'lax',
             maxAge: 7 * 24 * 60 * 60 * 1000 // שבוע
         });
 
@@ -197,7 +197,6 @@ const refresh = async (req: Request, res: Response) => {
         });
 
     } catch (err) {
-        console.log(err);
         res.status(400).send("fail in refresh");
     }
 };

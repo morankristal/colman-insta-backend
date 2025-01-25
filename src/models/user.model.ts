@@ -38,7 +38,8 @@ const userSchema = new Schema<IUser>({
         type: String,
         default: '',
     },
-});
+
+}, { versionKey: false });
 
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();
