@@ -7,8 +7,6 @@ import fs from "fs";
 import path from "path";
 
 
-// const postController = new BaseController<IPost>(Post);
-
 class PostController extends BaseController<IPost> {
     constructor() {
         super(Post);
@@ -90,7 +88,7 @@ class PostController extends BaseController<IPost> {
             const posts = await this.model.find({ sender: userId });
 
             if (posts.length === 0) {
-                return res.status(404).send("No posts found for this sender");
+                return res.status(200).send([]);
             }
 
             res.status(200).send(posts);

@@ -242,12 +242,13 @@ const refresh = async (req: Request, res: Response) => {
             return;
         }
 
-        if (!user.refreshToken) {
-            user.refreshToken = [];
+        if (!user.googleId) {
+            if (!user.refreshToken) {
+                user.refreshToken = [];
+            }
+            user.refreshToken.push(tokens.refreshToken);
+            await user.save();
         }
-        user.refreshToken.push(tokens.refreshToken);
-        await user.save();
-
         res.cookie('accessToken', tokens.accessToken, {
             httpOnly: false,
             secure: false,
