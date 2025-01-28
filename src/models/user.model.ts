@@ -32,10 +32,9 @@ const userSchema = new Schema<IUser>({
         required: function (this: IUser) { return !this.googleId; },
         validate: {
             validator: function (v: string) {
-                const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
-                return !!this.googleId || passwordRegex.test(v);
+                return !!this.googleId || v.length > 0;
             },
-            message: "Password must be at least 6 characters long, including both letters and numbers",
+            message: "Password is required"
         },
     },
 
@@ -51,8 +50,6 @@ const userSchema = new Schema<IUser>({
     googleId: {
         type: String,
         unique: true,
-        sparse: true,
-        default : null,
     },
 }, { versionKey: false });
 
