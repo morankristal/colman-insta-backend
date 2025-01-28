@@ -21,7 +21,7 @@ type User = IUser & {
 const testUser: Partial<User> = {
   username: "testuser",
   email: "test@user.com",
-  password: "testpassword",
+  password: "testpassword1",
 }
 
 beforeAll(async () => {
@@ -40,7 +40,7 @@ beforeAll(async () => {
 async function loginUser() {
     const response = await request(app).post('/auth/login').send({
     "username": "testuser",
-    "password": "testpassword"
+    "password": "testpassword1"
     })
     testUser.accessToken = response.body.accessToken
 };
@@ -79,9 +79,7 @@ describe("Post Tests", () => {
     };
         const failresponse = await request(app).post("/posts").send(newPost)
         expect(failresponse.statusCode).not.toBe(201)
-        const response = await request(app).post("/posts").set(
-            { authorization: "JWT " + testUser.accessToken })
-            .send(newPost)
+        const response = await request(app).post("/posts").set('Cookie', `refreshToken=${testUser.refreshToken}`).send(newPost)
         expect(response.statusCode).toBe(201);
         expect(response.body.title).toBe(newPost.title);
         expect(response.body.content).toBe(newPost.content);

@@ -22,7 +22,7 @@ type User = IUser & {
 const testUser: Partial<User> = {
   username: "testuser",
   email: "test@user.com",
-  password: "testpassword",
+  password: "testpassword1",
 }
 
 beforeAll(async () => {
@@ -45,7 +45,7 @@ beforeAll(async () => {
 async function loginUser() {
     const response = await request(app).post('/auth/login').send({
     "username": "testuser",
-    "password": "testpassword"
+    "password": "testpassword1"
     })
     testUser.accessToken = response.body.accessToken
 };

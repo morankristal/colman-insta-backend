@@ -31,7 +31,7 @@ type User = IUser & {
 const testUser: Partial<User> = {
   username: "testuser",
   email: "test@user.com",
-  password: "testpassword",
+  password: "testpassword1",
   profilePicture: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.com%2Ficon%2Favatar_266033&psig=AOvVaw2QulK1YcmpEdM3cN7scACn&ust=1736347053441000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCIiUhP7q44oDFQAAAAAdAAAAABAE",
 
 }
@@ -55,7 +55,7 @@ describe("Auth Tests", () => {
     const response2 = await request(app).post(baseUrl + "/register").send({
       username: "",
       email: "test@mail.com",
-      password: "testpassword",
+      password: "testpassword1",
     });
     expect(response2.statusCode).not.toBe(200);
   });
@@ -85,20 +85,20 @@ describe("Auth Tests", () => {
   test("Auth test login fail", async () => {
     const response = await request(app).post(baseUrl + "/login").send({
       username: testUser.username,
-      password: "notrightpassword",
+      password: "notrightpassword1",
     });
     expect(response.statusCode).not.toBe(200);
 
     const response2 = await request(app).post(baseUrl + "/login").send({
       username: "notrightusername",
-      password: "testpassword",
+      password: "testpassword1",
     });
     expect(response2.statusCode).not.toBe(200);
 
 
-      process.env.TOKEN_SECRET = ''; // לא להגדיר את הסוד כדי לגרום לכישלון
+      process.env.TOKEN_SECRET = '';
       const response6 = await request(app).post(baseUrl + "/login").send(testUser);
-      expect(response6.statusCode).not.toBe(200); // ציפייה לכישלון
+      expect(response6.statusCode).not.toBe(200);
 
     process.env.TOKEN_SECRET= "c51c41a352c64f067a3e40cc5bbabf2a42ef696d740239401c30d3ae2df9fbf4fe4645e790df1b57cbd83cea13fe624baf95f038ef5ad30030e0eaa86b7dc7fe"
 
@@ -113,7 +113,7 @@ describe("Auth Tests", () => {
     testUser.refreshToken = response.body.refreshToken;
 
     const response2 = await request(app).post(baseUrl + "/refresh");
-    expect(response2.statusCode).not.toBe(200); // ציפייה לכישלון
+    expect(response2.statusCode).not.toBe(200);
   });
 
   test("Double use refresh token", async () => {
@@ -159,7 +159,7 @@ describe("Auth Tests", () => {
     const testUser: Partial<User> = {
       username: "test123",
       email: "test123@user.com",
-      password: "testpassword",
+      password: "testpassword1",
     }
     const register = await request(app).post(baseUrl + "/register").send(testUser);
     testUser.id = register.body._id;
