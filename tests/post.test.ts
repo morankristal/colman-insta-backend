@@ -79,7 +79,8 @@ describe("Post Tests", () => {
     };
         const failresponse = await request(app).post("/posts").send(newPost)
         expect(failresponse.statusCode).not.toBe(201)
-        const response = await request(app).post("/posts").set('Cookie', `refreshToken=${testUser.refreshToken}`).send(newPost)
+        const response = await request(app).post("/posts").set(
+            { authorization: "JWT " + testUser.accessToken }).send(newPost)
         expect(response.statusCode).toBe(201);
         expect(response.body.title).toBe(newPost.title);
         expect(response.body.content).toBe(newPost.content);
