@@ -14,6 +14,7 @@ import postRouter from "./src/routes/post.router";
 import commentRouter from "./src/routes/comment.router";
 import userRouter from "./src/routes/user.router";
 import authRouter from "./src/routes/auth.router";
+import askRouter from "./src/routes/ask.router";
 import swaggerUi from "swagger-ui-express";
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerOptions from "./swagger";
@@ -34,6 +35,7 @@ app.use("/posts", postRouter);
 app.use("/comments", commentRouter);
 app.use("/users", userRouter);
 app.use("/auth", authRouter);
+app.use("/ask", askRouter);
 
 
 const db = mongoose.connection;
