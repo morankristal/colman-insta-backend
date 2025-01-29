@@ -66,7 +66,7 @@ const googleLogin = async (req: Request, res: Response) => {
         });
 
     } catch (err) {
-        res.status(400).send('Google login failed: ' + err);
+        res.status(400).send('Google login failed');
     }
 };
 

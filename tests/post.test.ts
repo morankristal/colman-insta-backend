@@ -5,7 +5,8 @@ import { Express } from "express";
 import Post from "../src/models/post.model";
 import testPosts from "./test_posts.json";
 import testUsers from "./test_users.json";
-import User ,{ IUser } from "../src/models/user.model";
+import User, { IUser } from "../src/models/user.model";
+import fs from 'fs';
 import path from "path";
 
 
@@ -16,13 +17,33 @@ type User = IUser & {
     accessToken?: string,
     refreshToken?: string
     userId?: string
-  };
+};
 
 const testUser: Partial<User> = {
-  username: "testuser",
-  email: "test@user.com",
-  password: "testpassword1",
+    username: "testuser",
+    email: "test@user.com",
+    password: "testpassword1",
 }
+const testFilesDir = path.join(__dirname, 'test-files');
+const testImagePath = path.join(testFilesDir, 'test-image.jpg');
+const testPdfPath = path.join(testFilesDir, 'test-file.pdf');
+const uploadDir = path.join(__dirname, '../src/images');
+
+const ensureDir = (dir: string) => {
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+    }
+};
+
+const safeDeleteFile = (filePath: string) => {
+    try {
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        }
+    } catch (error) {
+        console.error(`Error deleting file ${filePath}:`, error);
+    }
+};
 
 beforeAll(async () => {
     console.log("beforeAll");
@@ -35,23 +56,46 @@ beforeAll(async () => {
 
     const res = await request(app).post('/auth/register').send(testUser)
     testUser.id = res.body._id
+
+    ensureDir(testFilesDir);
+    ensureDir(uploadDir);
+
+    // Create test files
+    fs.writeFileSync(testImagePath, Buffer.from('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', 'base64')); // Valid 1x1 GIF
+    fs.writeFileSync(testPdfPath, Buffer.from('%PDF-1.4\n'));
 });
 
 async function loginUser() {
     const response = await request(app).post('/auth/login').send({
-    "username": "testuser",
-    "password": "testpassword1"
+        "username": "testuser",
+        "password": "testpassword1"
     })
     testUser.accessToken = response.body.accessToken
 };
 
-beforeEach(async ()=>{
+beforeEach(async () => {
     await loginUser()
+});
+
+afterEach(() => {
+    if (fs.existsSync(uploadDir)) {
+        const files = fs.readdirSync(uploadDir);
+        files.forEach(file => {
+            if (file.startsWith('test-')) {
+                safeDeleteFile(path.join(uploadDir, file));
+            }
+        });
+    }
 });
 
 afterAll((done) => {
     console.log("afterAll");
     mongoose.connection.close();
+
+    if (fs.existsSync(testFilesDir)) {
+        fs.rmSync(testFilesDir, { recursive: true, force: true });
+    }
+
     done();
 });
 
@@ -76,7 +120,7 @@ describe("Post Tests", () => {
             content: "This is a new post.",
             sender: testUser.id,
             image: "images/1737381621052-classic-cheese-pizza-FT-RECIPE0422-31a2c938fc2546c9a07b7011658cfd05.jpg"
-    };
+        };
         const failresponse = await request(app).post("/posts").send(newPost)
         expect(failresponse.statusCode).not.toBe(201)
         const response = await request(app).post("/posts").set(
@@ -251,14 +295,14 @@ describe("Post Tests", () => {
                 .post(`/posts/${postId}/like`)
                 .set({ authorization: "JWT " + testUser.accessToken });
             expect(response2.statusCode).toBe(200);
-            expect(response2.body.message).toBe( "Post unliked successfully");
+            expect(response2.body.message).toBe("Post unliked successfully");
 
             const response = await request(app)
                 .get("/posts/liked")
                 .set({ authorization: "JWT " + testUser.accessToken });
 
             expect(response.statusCode).toBe(404);
-            expect(response.body.message).toBe( "No liked posts found");
+            expect(response.body.message).toBe("No liked posts found");
         });
 
         test("fail get liked posts", async () => {
@@ -290,5 +334,88 @@ describe("Post Tests", () => {
             { authorization: "JWT " + testUser.accessToken });
         expect(response.statusCode).toBe(200);
         expect(response.body.message).toBe("Post deleted successfully");
+    });
+
+    test('should successfully upload a JPEG image', async () => {
+        const response = await request(app)
+            .post('/posts')
+            .set({ authorization: "JWT " + testUser.accessToken })
+            .field('title', 'Test Post with JPEG')
+            .field('content', 'This is a test post with a JPEG image')
+            .attach('image', testImagePath);
+
+        expect(response.status).toBe(201);
+        expect(response.body.image).toBeTruthy();
+        expect(response.body.image).toContain('images/');
+    });
+
+    test('should successfully upload a PNG image', async () => {
+        const pngPath = path.join(__dirname, 'test-files', 'test-image.png');
+        fs.writeFileSync(pngPath, Buffer.from('fake png data'));
+
+        const response = await request(app)
+            .post('/posts')
+            .set({ authorization: "JWT " + testUser.accessToken })
+            .field('title', 'Test Post with PNG')
+            .field('content', 'This is a test post with a PNG image')
+            .attach('image', pngPath);
+
+        expect(response.status).toBe(201);
+        expect(response.body.image).toBeTruthy();
+        expect(response.body.image).toContain('images/');
+
+
+        fs.unlinkSync(pngPath);
+    });
+
+    test('should handle missing file', async () => {
+        const response = await request(app)
+            .post('/posts')
+            .set({ authorization: "JWT " + testUser.accessToken })
+            .field('title', 'Test Post without Image')
+            .field('content', 'This is a test post without an image');
+
+        expect(response.status).toBe(400);
+        expect(response.body.error).toContain('required');
+    });
+
+    test('should handle large files', async () => {
+        const largePath = path.join(__dirname, 'test-files', 'large-image.jpg');
+        const largeBuffer = Buffer.alloc(16 * 1024 * 1024); 
+        fs.writeFileSync(largePath, largeBuffer);
+
+        const response = await request(app)
+            .post('/posts')
+            .set({ authorization: "JWT " + testUser.accessToken })
+            .field('title', 'Test Post with Large Image')
+            .field('content', 'This is a test post with a large image')
+            .attach('image', largePath);
+
+        expect(response.status).toBe(400);
+
+        fs.unlinkSync(largePath);
+    });
+
+    test('should handle multiple simultaneous uploads', async () => {
+        const promises = Array(3).fill(null).map(() => 
+            request(app)
+                .post('/posts')
+                .set({ authorization: "JWT " + testUser.accessToken })
+                .field('title', 'Simultaneous Upload Test')
+                .field('content', 'Testing multiple simultaneous uploads')
+                .attach('image', testImagePath)
+        );
+
+        const responses = await Promise.all(promises);
+        
+        responses.forEach(response => {
+            expect(response.status).toBe(201);
+            expect(response.body.image).toBeTruthy();
+            expect(response.body.image).toContain('images/');
+        });
+
+        const imageNames = responses.map(response => response.body.image);
+        const uniqueImageNames = new Set(imageNames);
+        expect(uniqueImageNames.size).toBe(responses.length);
     });
 });

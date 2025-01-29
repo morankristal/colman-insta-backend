@@ -1,7 +1,8 @@
 import { Router, Request, Response } from "express";
 import PostController from "../controllers/post.controller";
 import { authMiddleware } from "../common/authentication_middleware";
-import upload from "../common/uploadMiddleware";
+import upload, { handleUploadErrors } from "../common/uploadMiddleware";
+
 
 const router = Router();
 const postController = new PostController();
@@ -159,12 +160,11 @@ router.delete("/:id", authMiddleware, async (req: Request, res: Response): Promi
  *       400:
  *         description: Bad request
  */
-router.post(
-    "/",
-    authMiddleware, // Middleware לאימות משתמש
-    upload.single("image"), // Middleware של Multer להעלאת קובץ תמונה
+router.post("/", 
+    authMiddleware,
+    handleUploadErrors,
     async (req: Request, res: Response): Promise<void> => {
-        await postController.create(req, res); // קריאה לפונקציה ב-Controller
+        await postController.create(req, res);
     }
 );
 
