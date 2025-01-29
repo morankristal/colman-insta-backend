@@ -95,13 +95,13 @@ describe("User Tests", () => {
         const response = await request(app).delete(`/users/${userId}`).set({});
         expect(response.statusCode).toBe(404);
     });
-    
+
     test("Search by username (case-insensitive)", async () => {
         const response = await request(app).get(`/users/search/John_doe`);
         expect(response.statusCode).toBe(200);
         expect(response.body[0].username).toBe("john_doe");
     });
-    
+
 
     test("search username", async () => {
         const response = await request(app).get(`/users/search/john_doe`);
@@ -123,5 +123,35 @@ describe("User Tests", () => {
         expect(response.statusCode).toBe(404);
         expect(response.text).toBe("No users found matching that username");
     });
-        
+
+    test('should return 400 for invalid regex', async () => {
+        jest.spyOn(User, 'find').mockImplementationOnce(() => {
+            throw new Error('Invalid regex');
+        });
+
+        const response = await request(app).get('/users/search/invalid_regex?username=invalid');
+        expect(response.statusCode).toBe(400);
+    });
+    test('should return 400 if an error occurs while retrieving a user', async () => {
+        jest.spyOn(User, 'findOne').mockRejectedValueOnce(new Error('Database error'));
+
+        const response = await request(app).get('/users/invalid_username');
+        expect(response.statusCode).toBe(400);
+    });
+
+    test('should return 400 for invalid query format', async () => {
+        jest.spyOn(User, 'findOne').mockImplementationOnce(() => {
+            throw new Error('Invalid query format');
+        });
+
+        const response = await request(app).get('/users/invalid_username');
+        expect(response.statusCode).toBe(400);
+    });
+    test('should return 400 if an error occurs while searching for users', async () => {
+        jest.spyOn(User, 'find').mockRejectedValueOnce(new Error('Database error'));
+    
+        const response = await request(app).get('/users/search/invalid_username');
+    
+        expect(response.statusCode).toBe(400);
+    });
 });
