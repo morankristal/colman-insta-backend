@@ -2,11 +2,14 @@ import dotenv from "dotenv";
 import cors from 'cors';
 import cookieParser from "cookie-parser";
 
-if (process.env.NODE_ENV == 'test'){
-    dotenv.config({ path: './.testenv' })
-   } else {
-    dotenv.config()
-}
+if (process.env.NODE_ENV === "test") {
+    dotenv.config({ path: "./.testenv" });
+  } else if (process.env.NODE_ENV === "production") {
+    dotenv.config({ path: "./.envprod" });  // Explicitly load .envprod
+  } else {
+    dotenv.config(); // Defaults to .env
+  }
+  
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import express, { Express } from "express";
