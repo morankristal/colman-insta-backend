@@ -38,7 +38,8 @@ describe("User Tests", () => {
 
 
     test("Test Create User", async () => {
-        const newUser = { username: "unique_user", email: "unique_user@example.com", password: "securepassword1", profilePicture: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.com%2Ficon%2Favatar_266033&psig=AOvVaw2QulK1YcmpEdM3cN7scACn&ust=1736347053441000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCIiUhP7q44oDFQAAAAAdAAAAABAE",
+        const newUser = {
+            username: "unique_user", email: "unique_user@example.com", password: "securepassword1", profilePicture: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.com%2Ficon%2Favatar_266033&psig=AOvVaw2QulK1YcmpEdM3cN7scACn&ust=1736347053441000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCIiUhP7q44oDFQAAAAAdAAAAABAE",
         };
         const response = await request(app).post("/auth/register").send(newUser);
         expect(response.statusCode).toBe(200);
@@ -88,5 +89,69 @@ describe("User Tests", () => {
         const response = await request(app).delete(`/users/${userId}`);
         expect(response.statusCode).toBe(200);
         expect(response.body.message).toBe("Item deleted successfully");
+    });
+
+    test("Fail to delete user without authentication", async () => {
+        const response = await request(app).delete(`/users/${userId}`).set({});
+        expect(response.statusCode).toBe(404);
+    });
+
+    test("Search by username (case-insensitive)", async () => {
+        const response = await request(app).get(`/users/search/John_doe`);
+        expect(response.statusCode).toBe(200);
+        expect(response.body[0].username).toBe("john_doe");
+    });
+
+
+    test("search username", async () => {
+        const response = await request(app).get(`/users/search/john_doe`);
+        expect(response.statusCode).toBe(200);
+    });
+
+    test("search username not full name", async () => {
+        const response = await request(app).get(`/users/search/jo`);
+        expect(response.statusCode).toBe(200);
+    });
+
+    test("search username without sending", async () => {
+        const response = await request(app).get(`/users/search/`);
+        expect(response.statusCode).toBe(400);
+    });
+
+    test("search username that doesnt exist", async () => {
+        const response = await request(app).get(`/users/search/ronen`);
+        expect(response.statusCode).toBe(404);
+        expect(response.text).toBe("No users found matching that username");
+    });
+
+    test('should return 400 for invalid regex', async () => {
+        jest.spyOn(User, 'find').mockImplementationOnce(() => {
+            throw new Error('Invalid regex');
+        });
+
+        const response = await request(app).get('/users/search/invalid_regex?username=invalid');
+        expect(response.statusCode).toBe(400);
+    });
+    test('should return 400 if an error occurs while retrieving a user', async () => {
+        jest.spyOn(User, 'findOne').mockRejectedValueOnce(new Error('Database error'));
+
+        const response = await request(app).get('/users/invalid_username');
+        expect(response.statusCode).toBe(400);
+    });
+
+    test('should return 400 for invalid query format', async () => {
+        jest.spyOn(User, 'findOne').mockImplementationOnce(() => {
+            throw new Error('Invalid query format');
+        });
+
+        const response = await request(app).get('/users/invalid_username');
+        expect(response.statusCode).toBe(400);
+    });
+    test('should return 400 if an error occurs while searching for users', async () => {
+        jest.spyOn(User, 'find').mockRejectedValueOnce(new Error('Database error'));
+    
+        const response = await request(app).get('/users/search/invalid_username');
+    
+        expect(response.statusCode).toBe(400);
     });
 });

@@ -12,10 +12,6 @@ class userController extends BaseController<IUser> {
     async searchByUsername(req: Request, res: Response) {
         const usernameQuery = req.params.username;
 
-        if (!usernameQuery) {
-            return res.status(400).send("Username query parameter is required");
-        }
-
         try {
             const users = await User.find({
                 username: { $regex: usernameQuery, $options: "i" },
