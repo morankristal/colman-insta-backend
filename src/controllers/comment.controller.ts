@@ -50,6 +50,17 @@ class CommentController extends BaseController<IComment> {
             return res.status(400).send(error);
         }
     }
+
+    async getCommentsByPostId(req: Request, res: Response) {
+        const postId = req.params.postId;
+        try {
+            const comments = await this.model.find({ post: postId }).populate('sender', 'name');
+            res.status(200).send(comments);
+        } catch (error) {
+            res.status(400).send(error);
+        }
+    }
+
 }
 
 export default CommentController;

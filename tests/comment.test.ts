@@ -22,7 +22,7 @@ type User = IUser & {
 const testUser: Partial<User> = {
   username: "testuser",
   email: "test@user.com",
-  password: "testpassword",
+  password: "testpassword1",
 }
 
 beforeAll(async () => {
@@ -45,7 +45,7 @@ beforeAll(async () => {
 async function loginUser() {
     const response = await request(app).post('/auth/login').send({
     "username": "testuser",
-    "password": "testpassword"
+    "password": "testpassword1"
     })
     testUser.accessToken = response.body.accessToken
 };
@@ -152,6 +152,28 @@ describe("Comments Tests", () => {
             .send(updatedPost);
         expect(response.statusCode).toBe(404);
     });
+
+    test("Get all comments for a specific post", async () => {
+        const response = await request(app).get(`/comments/getByPost/777f777f7f7777f77f1f1f1f`).set(
+            { authorization: "JWT " + testUser.accessToken });
+        expect(response.statusCode).toBe(200);
+    });
+
+    test("Get comments for a post with no comments", async () => {
+        const emptyPostId = "444f444f4f4444f44f1f1f1f"; // A post ID not in test data
+        const response = await request(app).get(`/comments/getByPost/${emptyPostId}`).set(
+            { authorization: "JWT " + testUser.accessToken });
+        expect(response.statusCode).toBe(200);
+    });
+
+    test("Fail to get comments for a non-existing post", async () => {
+        const invalidPostId = "444f444f4f4444f44f1f1f1";
+        const response = await request(app).get(`/comments/getByPost/${invalidPostId}`).set(
+            { authorization: "JWT " + testUser.accessToken });
+        expect(response.statusCode).toBe(400);
+    });
+
+
 
     test("Delete a comment does not exists", async () => {
         const response = await request(app).delete(`/comments/123f123f1f1234f12f1f1f1f`).set(
