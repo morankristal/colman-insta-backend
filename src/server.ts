@@ -10,11 +10,11 @@ if (process.env.NODE_ENV == 'test'){
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import express, { Express } from "express";
-import postRouter from "./src/routes/post.router";
-import commentRouter from "./src/routes/comment.router";
-import userRouter from "./src/routes/user.router";
-import authRouter from "./src/routes/auth.router";
-import askRouter from "./src/routes/ask.router";
+import postRouter from "./routes/post.router";
+import commentRouter from "./routes/comment.router";
+import userRouter from "./routes/user.router";
+import authRouter from "./routes/auth.router";
+import askRouter from "./routes/ask.router";
 import swaggerUi from "swagger-ui-express";
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerOptions from "./swagger";

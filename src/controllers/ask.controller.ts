@@ -11,7 +11,7 @@ class AskController {
 
             const prompt = req.body.prompt;
 
-            const result = await model.generateContent(prompt);
+            const result = await model.generateContent("write a short post about: " + prompt);
             res.status(200).send(result.response.text());
         } catch (error) {
             console.error(error);

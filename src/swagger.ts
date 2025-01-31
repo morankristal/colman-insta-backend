@@ -152,7 +152,7 @@ const swaggerOptions: Options = {
         password: {
           type: "string",
           description: "Password of the user (not shown in responses)",
-          writeOnly: true,  // Don't expose password in API responses
+          writeOnly: true, 
         },
         refreshToken: {
           type: "array",
