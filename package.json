@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prod": "dotenv -e .envprod -- bash -c 'rm -rf dist && tsc --project tsconfig.prod.json && pm2 start dist/app.js --name colman-threads'",
+    "prod": "NODE_ENV=production dotenv -e .envprod -- bash -c 'rm -rf dist && tsc --project tsconfig.prod.json && pm2 start dist/app.js --name colman-threads'",
     "test": "jest --detectOpenHandles --passWithNoTests --runInBand --coverage",
     "testAuth": "jest --detectOpenHandles --forceExit auth.test.ts",
     "testPost": "jest --detectOpenHandles --forceExit post.test.ts",
