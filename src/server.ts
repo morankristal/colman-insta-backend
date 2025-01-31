@@ -20,6 +20,7 @@ import swaggerJsDoc from "swagger-jsdoc";
 import swaggerOptions from "./swagger";
 import path from "path";
 
+
 const app: Express = express();
 app.use(cors({
     origin: 'http://localhost:5173', // כתובת האתר שלך
