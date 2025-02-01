@@ -27,7 +27,7 @@ import path from "path";
 const app: Express = express();
 
 app.use(cors({
-    origin: 'http://localhost:5173', // כתובת האתר שלך
+    origin: process.env.BASE_URL, // כתובת האתר שלך
     credentials: true, // מאפשר שליחה של קוקיז
 }));
 
