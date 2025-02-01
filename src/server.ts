@@ -31,12 +31,6 @@ app.use(cors({
     credentials: true, // מאפשר שליחה של קוקיז
 }));
 
-app.use(express.static(path.join(__dirname, 'front')));
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'front', 'index.html'));
-});
-
-
 const swaggerSpec = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/uploads', express.static('src/common'));
@@ -48,6 +42,10 @@ app.use("/users", userRouter);
 app.use("/auth", authRouter);
 app.use("/ask", askRouter);
 
+app.use(express.static(path.join(__dirname, 'front')));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'front', 'index.html'));
+});
 
 const db = mongoose.connection;
 db.on("error", (error) => console.error(error));
