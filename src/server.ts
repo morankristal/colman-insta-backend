@@ -44,7 +44,14 @@ app.use("/users", userRouter);
 app.use("/auth", authRouter);
 app.use("/ask", askRouter);
 
-app.use(express.static("front"));
+// Serve React static files
+const frontPath = path.join(__dirname, "front");
+app.use(express.static(frontPath));
+
+// Fallback for React's client-side routing
+app.get("*", (req, res) => {
+    res.sendFile(path.join(frontPath, "index.html"));
+});
 
 const db = mongoose.connection;
 db.on("error", (error) => console.error(error));
