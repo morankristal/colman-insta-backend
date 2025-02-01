@@ -43,7 +43,7 @@ app.use("/auth", authRouter);
 app.use("/ask", askRouter);
 
 // app.use("/public", express.static("public"));
-app.use("/uploads", express.static("src/common"));
+app.use("/uploads", express.static("common"));
 app.use(express.static("front"));
 
 const db = mongoose.connection;
