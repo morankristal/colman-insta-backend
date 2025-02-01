@@ -4,12 +4,12 @@ import cookieParser from "cookie-parser";
 
 if (process.env.NODE_ENV === "test") {
     dotenv.config({ path: "./.testenv" });
-  } else if (process.env.NODE_ENV === "production") {
+} else if (process.env.NODE_ENV === "production") {
     dotenv.config({ path: "./.envprod" });  // Explicitly load .envprod
-  } else {
+} else {
     dotenv.config(); // Defaults to .env
-  }
-  
+}
+
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import express, { Express } from "express";
@@ -25,10 +25,17 @@ import path from "path";
 
 
 const app: Express = express();
+
 app.use(cors({
     origin: 'http://localhost:5173', // כתובת האתר שלך
     credentials: true, // מאפשר שליחה של קוקיז
 }));
+
+app.use(express.static(path.join(__dirname, 'front')));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'front', 'index.html'));
+});
+
 
 const swaggerSpec = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
