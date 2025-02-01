@@ -46,14 +46,16 @@ const googleLogin = async (req: Request, res: Response) => {
 
         res.cookie('accessToken', tokens.accessToken, {
             httpOnly: false,
-            secure: false,
+            secure: true,
+            // secure: false,
             sameSite: 'lax',
             maxAge: 3 * 24 * 60 * 60 * 1000
         });
 
         res.cookie('refreshToken', tokens.refreshToken, {
             httpOnly: false,
-            secure: false,
+            secure: true,
+            // secure: false,
             sameSite: 'lax',
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
@@ -148,14 +150,16 @@ const login = async (req: Request, res: Response) => {
 
         res.cookie('accessToken', tokens.accessToken, {
             httpOnly: false,
-            secure: false,
+            secure: true,
+            // secure: false,
             sameSite: 'lax',
             maxAge: 3 * 24 * 60 * 60 * 1000
         });
 
         res.cookie('refreshToken', tokens.refreshToken, {
             httpOnly: false,
-            secure: false,
+            secure: true,
+            // secure: false,
             sameSite: 'lax',
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
@@ -250,14 +254,16 @@ const refresh = async (req: Request, res: Response) => {
         }
         res.cookie('accessToken', tokens.accessToken, {
             httpOnly: false,
-            secure: false,
+            secure: true,
+            // secure: false,
             sameSite: 'lax',
             maxAge: 3 * 24 * 60 * 60 * 1000
         });
 
         res.cookie('refreshToken', tokens.refreshToken, {
             httpOnly: false,
-            secure: false,
+            secure: true,
+            // secure: false,
             sameSite: 'lax',
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
