@@ -12,7 +12,7 @@ const credentials = { key: privateKey, cert: certificate };
 initApp()
   .then((app) => {
     https.createServer(credentials, app).listen(PORT, () => {
-      console.log("Server is running on https://localhost:443");
+      console.log(`Server is running on https://localhost:${PORT}`);
     });
   })
   .catch((error) => {
