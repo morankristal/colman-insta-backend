@@ -42,10 +42,9 @@ app.use("/users", userRouter);
 app.use("/auth", authRouter);
 app.use("/ask", askRouter);
 
-app.use(express.static(path.join(__dirname, 'front')));
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'front', 'index.html'));
-});
+app.use("/public", express.static("public"));
+app.use("/storage", express.static("storage"));
+app.use(express.static("front"));
 
 const db = mongoose.connection;
 db.on("error", (error) => console.error(error));
