@@ -33,7 +33,7 @@ app.use(cors({
 
 const swaggerSpec = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use('/uploads', express.static('src/common'));
+// app.use('/uploads', express.static('src/common'));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use("/posts", postRouter);
