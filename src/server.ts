@@ -35,6 +35,7 @@ const swaggerSpec = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // app.use('/uploads', express.static('src/common'));
 const uploadsPath = path.join(__dirname, 'common');
+console.log('Serving static files from:', uploadsPath);
 app.use('/uploads', express.static(uploadsPath));
 app.use(bodyParser.json());
 app.use(cookieParser());
