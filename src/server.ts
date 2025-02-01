@@ -34,6 +34,7 @@ app.use(cors({
 const swaggerSpec = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // app.use('/uploads', express.static('src/common'));
+app.use("/uploads", express.static("common"));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use("/posts", postRouter);
@@ -43,7 +44,6 @@ app.use("/auth", authRouter);
 app.use("/ask", askRouter);
 
 // app.use("/public", express.static("public"));
-app.use("/uploads", express.static("common"));
 app.use(express.static("front"));
 
 const db = mongoose.connection;
