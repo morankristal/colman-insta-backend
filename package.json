@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prod": "cp .envprod .env && tsc --project tsconfig.prod.json && pm2 restart ecosystem.config.js --env production'",
+    "prod": "cp .envprod .env && tsc --project tsconfig.prod.json && pm2 restart ecosystem.config.js --env production",
     "test": "jest --detectOpenHandles --passWithNoTests --runInBand --coverage",
     "testAuth": "jest --detectOpenHandles --forceExit auth.test.ts",
     "testPost": "jest --detectOpenHandles --forceExit post.test.ts",
