@@ -119,7 +119,7 @@ describe("Post Tests", () => {
             title: "New Post Title",
             content: "This is a new post.",
             sender: testUser.id,
-            image: "images/1737381621052-classic-cheese-pizza-FT-RECIPE0422-31a2c938fc2546c9a07b7011658cfd05.jpg"
+            image: "images/1737381619830-classic-cheese-pizza-FT-RECIPE0422-31a2c938fc2546c9a07b7011658cfd05.jpg"
         };
         const failresponse = await request(app).post("/posts").send(newPost)
         expect(failresponse.statusCode).not.toBe(201)
@@ -184,7 +184,8 @@ describe("Post Tests", () => {
     test("Update post with a new image", async () => {
         const updatedPost = {
             title: "Updated Post with New Image",
-            content: "This is an updated post with a new image."
+            content: "This is an updated post with a new image.",
+            image: "images/1737381619830-classic-cheese-pizza-FT-RECIPE0422-31a2c938fc2546c9a07b7011658cfd05.jpg"
         };
 
         const response = await request(app)
@@ -196,7 +197,7 @@ describe("Post Tests", () => {
         expect(response.statusCode).toBe(200);
         expect(response.body.title).toBe(updatedPost.title);
         expect(response.body.content).toBe(updatedPost.content);
-        expect(response.body.image).toContain("images/"); // תוודא שהתמונה החדשה נמצאת במסלול המתאים
+        expect(response.body.image).toContain("images/");
     });
 
     test("Fail to create post with invalid image type", async () => {

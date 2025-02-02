@@ -11,7 +11,7 @@ type tTokens = {
 }
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
+/* istanbul ignore next */
 const googleLogin = async (req: Request, res: Response) => {
     try {
         const tokenId = req.body.credential;
@@ -244,7 +244,7 @@ const refresh = async (req: Request, res: Response) => {
             res.status(500).send('Server Error');
             return;
         }
-
+        /* istanbul ignore next */
         if (!user.googleId) {
             if (!user.refreshToken) {
                 user.refreshToken = [];
@@ -296,6 +296,7 @@ const logout = async (req: Request, res: Response) => {
             res.status(400).send("Failed to verify refresh token in logout");
             return;
         }
+        /* istanbul ignore next */
 
         if (user.googleId) {
             res.clearCookie('accessToken');

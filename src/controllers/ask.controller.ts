@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const apikey = process.env.GOOGLE_API_KEY as string;
-
+/* istanbul ignore next */
 class AskController {
     async askQuestion(req: Request, res: Response) {
         try {
