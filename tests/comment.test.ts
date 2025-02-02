@@ -1,5 +1,5 @@
 import request from "supertest";
-import initApp from "../server";
+import initApp from "../src/server";
 import mongoose from "mongoose";
 import { Express } from "express";
 import Post from "../src/models/post.model";

@@ -1,5 +1,5 @@
 import request from "supertest";
-import initApp from "../server";
+import initApp from "../src/server";
 import mongoose from "mongoose";
 import { Express } from "express";
 import Post from "../src/models/post.model";
@@ -381,7 +381,7 @@ describe("Post Tests", () => {
 
     test('should handle large files', async () => {
         const largePath = path.join(__dirname, 'test-files', 'large-image.jpg');
-        const largeBuffer = Buffer.alloc(16 * 1024 * 1024); 
+        const largeBuffer = Buffer.alloc(25 * 1024 * 1024); 
         fs.writeFileSync(largePath, largeBuffer);
 
         const response = await request(app)
